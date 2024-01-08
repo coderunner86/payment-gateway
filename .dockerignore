@@ -1,0 +1,44 @@
+# APP
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.mypy_cache
+.pytest_cache
+.hypothesis
+.editorconfig
+README.md
+*.md
+db.sqlite3
+
+# GIT
+.git
+*.git
+.gitignore
+
+# CONTAINER
+Dockerfile
+Containerfile
+.dockerignore
+compose.yml
+compose.yaml
+compose.dev.yml
+compose.dev.yaml
+docker-compose.yml
+docker-compose.yaml
+.env
+*.env
+.env.dev
+*.dev
+.env.qa
+*.qa

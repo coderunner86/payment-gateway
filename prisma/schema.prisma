@@ -1,0 +1,50 @@
+// database
+datasource db {
+  provider = "sqlite"
+  url      = "file:db.sqlite3"
+}
+
+// generator
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = -1
+}
+
+// data models
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String
+  last_name  String?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  Payment    Payment[]
+
+  @@map("users")
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  Payment     Payment[]
+
+  @@map("products")
+}
+
+model Payment {
+  id         Int      @id @default(autoincrement())
+  amount     Float
+  user       User     @relation(fields: [user_id], references: [id])
+  product    Product  @relation(fields: [product_id], references: [id])
+  accepted   Boolean @default(false) 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_id    Int
+  product_id Int
+
+  @@map("payments")
+}
