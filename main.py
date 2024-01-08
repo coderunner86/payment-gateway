@@ -1,11 +1,18 @@
+import os
+import stripe
 import uvicorn
 from fastapi import FastAPI
+from dotenv import load_dotenv
 
 from app.settings.database import database
 from app.settings.environment import settings
 from app.settings.routers import routers
 
+env_path = os.path.jpin(".", ".env")
+load_dotenv(dotenv_path=env_path)
+
 app = FastAPI()
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
   
 @app.on_event("startup")
 async def startup():
