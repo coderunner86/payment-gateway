@@ -8,7 +8,7 @@ from app.settings.database import database
 from app.settings.environment import settings
 from app.settings.routers import routers
 
-env_path = os.path.jpin(".", ".env")
+env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 
 app = FastAPI()
