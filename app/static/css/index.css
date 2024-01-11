@@ -1,0 +1,20 @@
+/* Estilo para el fondo de la página */
+body {
+    background-color: #9D265A !important;
+    font-size: 50px !important;
+    font-weight: normal !important;
+}
+
+/* Estilo para el formulario y los botones */
+.custom-form {
+    border-radius: 10px; /* Bordes redondeados */
+    background-color: #ffffff; /* Color de fondo del formulario */
+    padding: 20px; /* Espaciado interior */
+    margin-bottom: 20px; /* Margen inferior */
+}
+
+/* Estilo para los botones */
+.custom-button {
+    display: inline-block; /* Botones en línea */
+    margin-right: 10px; /* Margen derecho entre los botones */
+}

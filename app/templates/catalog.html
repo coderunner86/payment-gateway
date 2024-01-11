@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Catálogo de Productos</title>
+</head>
+<body>
+    <h1>Catálogo de Productos</h1>
+    <ul>
+        {% for url, nombre in products_links.items() %}
+        <li>
+            <a href="{{ url }}">{{ nombre }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
