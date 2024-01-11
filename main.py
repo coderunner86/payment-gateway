@@ -1,19 +1,24 @@
 import os
 import stripe
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 
 from app.settings.database import database
 from app.settings.environment import settings
 from app.settings.routers import routers
-
+from fastapi.responses import HTMLResponse
 env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 
+from fastapi.templating import Jinja2Templates
+
 app = FastAPI()
+
+templates = Jinja2Templates(directory="app/templates")
+
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-  
+
 @app.on_event("startup")
 async def startup():
     await database.connect()

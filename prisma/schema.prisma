@@ -18,7 +18,8 @@ model User {
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   Payment    Payment[]
-
+  Cus        String
+  
   @@map("users")
 }
 
@@ -47,4 +48,5 @@ model Payment {
   product_id Int
 
   @@map("payments")
+
 }
