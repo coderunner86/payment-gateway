@@ -1,8 +1,15 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 
 from app.payment.services import CreatePayment, UpdatePayment, PaymentService, ConfirmPayment
 
 import requests
+
+from fastapi.responses import HTMLResponse
+
+from starlette.templating import Jinja2Templates
+
+
+templates = Jinja2Templates(directory="app/templates")
 
 payment_service = PaymentService
 
@@ -40,8 +47,6 @@ async def stripe_payment_confirm(payment_intent_id: str, payment_service: Paymen
         raise HTTPException(status_code=400, detail=result)
     return result
     
-    # pass
-
 
 @router.put("/{id}")
 async def update_payment(id: int, payment: UpdatePayment, payment_service:PaymentService = Depends()):
@@ -51,3 +56,13 @@ async def update_payment(id: int, payment: UpdatePayment, payment_service:Paymen
 @router.delete("/{id}")
 async def delete_payment(id: int, payment_service: PaymentService = Depends()):
     return await payment_service.delete_payment(payment_id=id)
+
+@router.get("/payment_links")
+async def get_payment_links():
+    return await payment_service.get_payment_links()
+
+@router.get("/catalog",response_class=HTMLResponse)
+async def signin(request: Request, product_service: PaymentService = Depends()):
+    products_links = await payment_service.get_payment_links()
+    return templates.TemplateResponse("catalog.html",context={"request":request, "products_links": products_links})
+   

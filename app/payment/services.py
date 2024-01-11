@@ -228,3 +228,20 @@ class PaymentService:
         except stripe.error.StripeError as e:
             
             return {"error": str(e)}
+        
+
+    async def get_payment_links():
+        try:
+            payment_links = stripe.PaymentLink.list(limit=100, active=True)
+            productos = stripe.Product.list(limit=100).data 
+
+            links_y_productos = {}
+            productos_invertidos = productos[::-1]
+            
+            for index, link in enumerate(payment_links.data):
+                producto = productos_invertidos[index]
+                links_y_productos[link.url] = producto.name
+            return links_y_productos
+        
+        except Exception as e:
+            return {"error": str(e)}
