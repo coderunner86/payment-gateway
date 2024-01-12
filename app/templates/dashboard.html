@@ -1,9 +1,26 @@
 <html>
 <head>
     <title>Customer Details</title>
-    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1>Item ID: {{ id }}</h1>
+    <h1>Registered Customers</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>CUS</th>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cus_id, details in users.items() %}
+            <tr>
+                <td>{{ cus_id }}</td>
+                <td>{{ details.name }}</td>
+                <td>{{ details.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
