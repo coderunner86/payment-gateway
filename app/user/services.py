@@ -3,10 +3,13 @@ from pydantic import BaseModel
 from pydantic import  ValidationError
 from typing import Optional
 
+import stripe
+
 class CreateUser(BaseModel):
     id: int
     name:str 
     last_name: Optional[str] = None
+    email: str
 
 
 class UpdateUser(BaseModel):
@@ -29,7 +32,11 @@ class UserService:
     async def create_user(self, user: CreateUser):
         try:
             new_user = await self.repository.user.create(data=user.dict())
-            return {"message": "User created successfully", "user": new_user}
+            stripe_user = stripe.Customer.create(
+            email=new_user.email,
+            name=new_user.name
+        )
+            return  {"message": "User created successfully", "user": {"stripe_id": stripe_user["id"]}}
         except Exception as ex:
             return {"error": str(ex)}
 
