@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, Form
-from fastapi import APIRouter, HTTPException
+from fastapi import HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 from starlette.responses import Response
@@ -8,20 +8,19 @@ from app.auth.jwt_manager import create_token
 from app.stripe_integration.stripe_users import get_customers_info
 from app.login.services import UserLogin
 
-user_login = UserLogin
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(
-    prefix="/home",
-    tags=["home"],
+    prefix="/users",
+    tags=["users"],
 )
 
 @router.get('/login', response_class=HTMLResponse)
-async def show_login_form(request: Request):
+async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
     
 @router.post('/login')
-async def process_login_form(email: str = Form(...), password: str = Form(...)):
+async def login(email: str = Form(...), password: str = Form(...)):
     user = UserLogin(email=email, password=password)
     users_info = await get_customers_info()
     print('users_info', users_info)
@@ -30,9 +29,11 @@ async def process_login_form(email: str = Form(...), password: str = Form(...)):
 
     if user.email in [customer_info["email"] for customer_info in users_info.values()]:
         token: str = create_token(user.dict())
-        # return {"token": token}
+        print(token)
         response = Response('/login')
         response.set_cookie(key="token", value=token, httponly=True, secure=True)
-        return RedirectResponse(url='/api/users/customers', status_code=303) 
+        redirect_response = RedirectResponse(url='/api/users/dashboard', status_code=303)
+        redirect_response.set_cookie(key="token", value=token, httponly=True, secure=True)
+        return redirect_response 
     else:
         raise HTTPException(status_code=404, detail="Email not found")

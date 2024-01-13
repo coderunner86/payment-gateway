@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, Request
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, HTTPException, Depends, Request, Response
+from fastapi.responses import HTMLResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 
 #stripe imports
@@ -11,8 +11,14 @@ router = APIRouter(
     prefix="/users",
     tags=["users"]
 )
-
-@router.get("/customers", response_class=HTMLResponse, dependencies=[Depends(JWTBearer())])
+Bearer = JWTBearer()
+print("Bearer",Bearer)
+# , dependencies=[Depends(JWTBearer())]
+@router.get("/dashboard", response_class=HTMLResponse)
 async def customers_dashboard(request: Request):
+    token = request.cookies.get("token")
+    print("received token",token)
+    if not token:
+        return RedirectResponse(url='/api/users/login', status_code=303)
     users = await get_customers_info()
     return templates.TemplateResponse("dashboard.html", context={"request": request, "users": users})

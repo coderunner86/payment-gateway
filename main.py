@@ -12,6 +12,7 @@ from app.settings.environment import settings
 from app.settings.routers import routers
 from fastapi.responses import HTMLResponse, JSONResponse
 
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 
@@ -21,6 +22,8 @@ env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.add_middleware(ErrorHamdler)
 

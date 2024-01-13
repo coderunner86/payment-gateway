@@ -10,8 +10,8 @@ router = APIRouter(
     prefix="/products",
     tags=["products"]
 )
-
-@router.get("/catalog",response_class=HTMLResponse,  dependencies=[Depends(JWTBearer())])
+# ,  dependencies=[Depends(JWTBearer())]
+@router.get("/catalog",response_class=HTMLResponse)
 async def payment_links(request: Request):
         products_links =  await get_payment_links()
         return templates.TemplateResponse("catalog.html",context={"request":request, "products_links": products_links})
