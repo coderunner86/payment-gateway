@@ -172,3 +172,6 @@ poetry.toml
 
 ### TODO ###
 todo.tasks
+
+### custom files ###
+commits.txt
