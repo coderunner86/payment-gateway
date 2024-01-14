@@ -2,7 +2,7 @@ from app.settings.database import database
 from pydantic import BaseModel
 from pydantic import  ValidationError
 from typing import Optional
-
+import stripe
 class CreateProduct(BaseModel):
     id: int
     name:str
@@ -33,7 +33,15 @@ class ProductService:
     async def create_product(self, product: CreateProduct):
         try:    
             new_product = await self.repository.product.create(data = product.dict())
-            return {"message": "Product created succesfully", "user":new_product}
+            new_stripe_product = stripe.Product.create(name=new_product.name, description=new_product.description)
+            new_product = new_product.dict()
+            new_product["stripeProductId"] = new_stripe_product["id"]
+            stripeProductId = new_product["stripeProductId"]
+            await self.repository.product.update(where={"id": new_product["id"]}, data={"stripeProductId": stripeProductId})
+            new_product_price = stripe.Price.create(
+                unit_amount=new_product["price"]*100, currency="usd", product_data={"name": new_product["name"]},
+            )
+            return {"message": "Product created succesfully", "product id":new_product["stripeProductId"]}
         except Exception as ex:
             return {"error": str(ex)}
 
