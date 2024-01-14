@@ -14,6 +14,7 @@ generator client {
 model User {
   id         Int         @id @default(autoincrement())
   email      String      @unique
+  password   String
   name       String
   last_name  String?
   created_at DateTime    @default(now())
@@ -27,7 +28,6 @@ model User {
 model StripeUser {
   id       Int    @id @default(autoincrement())
   cus_id   String @unique
-  password String
   user     User   @relation(fields: [user_id], references: [id])
   user_id  Int    @unique
 
