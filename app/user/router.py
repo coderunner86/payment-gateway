@@ -18,6 +18,10 @@ async def get_all_users(user_service: UserService = Depends()):
 async def get_user(id: int, user_service: UserService = Depends()):
     return await user_service.find_user(user_id=id)
 
+@router.get("/{email:str}")
+async def get_user_by_email(email: str, user_service: UserService = Depends()):
+    return await user_service.find_user_by_email(email=email)
+
 @router.post("/")
 async def create_user(user: CreateUser, user_service: UserService=Depends()):
     try:
