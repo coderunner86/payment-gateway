@@ -6,7 +6,7 @@ from app.payment.services import (
     PaymentService,
     ConfirmPayment,
 )
-
+from app.middlewares.jwt_handler import JWTBearer
 from fastapi.responses import HTMLResponse
 
 from starlette.templating import Jinja2Templates
@@ -33,7 +33,7 @@ async def get_all_payments(payment_service: PaymentService = Depends()):
     return await payment_service.find_all_payment()
 
 
-@router.post("/")
+@router.post("/new", dependencies=[Depends(JWTBearer())])
 async def create_payment(
     payment: CreatePayment, payment_service: PaymentService = Depends()
 ):
@@ -47,7 +47,7 @@ async def create_payment(
         )
 
 
-@router.post("/confirm")
+@router.post("/confirm",dependencies=[Depends(JWTBearer())])
 async def stripe_payment_confirm(
     payment_intent_id: str, payment_service: PaymentService = Depends()
 ):
