@@ -23,12 +23,18 @@ class CreatePayment(PaymentBase):
 class UpdatePayment(BaseModel):
     product_id: int
     amount: int
+    stripe_payment_id: str  
+    status: str   
+    payment_method_types: str
 
 class Payment(PaymentBase):
     id: int
     user_id: int
     payment_id: int
     amount: int
+    stripe_payment_id: str  
+    status: str   
+    payment_method_types: str
 
 class AbstractModel(PaymentBase):
     payment_method: str
@@ -62,7 +68,6 @@ class PaymentService:
         }
             
         return payment_info_by_id
-    
     
     async def find_all_payment(self):
         
@@ -114,24 +119,22 @@ class PaymentService:
                 "created_at": new_payment.created_at.isoformat(),
                 "updated_at": new_payment.updated_at.isoformat(),
                 }
-            # print(f'payment info: {payment_info}') 
+          
             payment_id = payment_info["payment id"]
-            # print(f'payment id: {payment_id}')
             amount = payment_info["amount"]
-            # print(f'amount: {amount}')
             confirm_payment_url = 'localhost:8000/confirm'
             try:
                 payment_intent = await self.stripe_payment_intent(new_payment.id)
-                
+                print('*********************')
+                print(type(payment_intent))
                 if payment_intent.get("Success"):
                     new_payment.accepted = True
-                    await self.repository.payment.update(data = {"accepted": True}, where={"id": new_payment.id})
-                    
                     charge = payment_intent["charge"]
                     payment_intent_id = payment_intent["payment_intent_id"]
                     payment_method = payment_intent["payment_method"]
                     payment_status = payment_intent["status"]
-                    return {"message": "Payment created successfully", "payment_info": payment_info, "charge": charge,"payment_intent_id":payment_intent_id, "payment_method": payment_method, "payment_status": payment_status, "redirect url": confirm_payment_url}, 201
+                    await self.repository.payment.update(data = {"accepted": True, "stripe_payment_id": payment_intent_id, "payment_method_types": payment_method, "status": payment_status }, where={"id": new_payment.id})
+                    return {"message": "Payment created successfully", "payment_info": payment_info, "charge": charge,"payment_intent_id":payment_intent_id, "payment_method_types": payment_method, "status": payment_status, "redirect url": confirm_payment_url}, 201
                 
                 else:
                     return {"error": "Payment processing failed", "details": payment_intent.get("error")}, 400
@@ -142,18 +145,6 @@ class PaymentService:
             
             except Exception as ex:
                 return {"error": str(ex)}, 500
-
-   #Confirm Payment method
-        
-    async def stripe_payment_confirm(self, payment_intent_id: str, payment_method: str):
-        try:     
-  
-             result = stripe.PaymentIntent.confirm(payment_intent_id, payment_method=payment_method, return_url="https://www.example.com",
-), 
-             return result
-        except Exception as ex:
-             return {"message": f"An error has ocurred {ex}"}
-
 
 
     async def update_payment(self, payment_id: int, payment: UpdatePayment):
@@ -198,26 +189,23 @@ class PaymentService:
         await self.repository.payment.delete(where={"id": payment_id})
         return  {"message": f"Payment {payment_id} deleted successfully"}, 200
 
-
+    
 #--------------------------------------------------
 #          PAYMENT PROCESSING METHODS             #                        
 #           (Stripe API v1 integration)           #
 #--------------------------------------------------
             
 
-
+### Create Payment Intent ###
+    
     #This method will process the payment intent by charge the debit or credit card of the user
     async def stripe_payment_intent(self, payment_id: int):
         payment = await self.find_payment(payment_id)
-        # print(f"¨¨¨payment associated:¨¨¨ {payment}")
         amount = payment["amount"]    
-        # product_id = payment["produc7t id"]
         if not payment:
             return {"error": "Payment intent not found"}
-        
         try:
             charge = "ch_1NirD82eZvKYlo2CIvbtLWuY" #foo value
-
             result = stripe.PaymentIntent.create(
             amount=amount,
             currency="usd",
@@ -225,10 +213,11 @@ class PaymentService:
             description=charge        
             )
             return {"Success": True, "charge": charge, "payment_intent_id": result.id, "payment_method": result.payment_method, "status":result.status }
-        except stripe.error.StripeError as e:
+        except stripe.errro.StripeError as e:
             
             return {"error": str(e)}
         
+ ### Get Payment Links ###       
 
     async def get_payment_links():
         try:
@@ -242,6 +231,55 @@ class PaymentService:
                 producto = productos_invertidos[index]
                 links_y_productos[link.url] = producto.name
             return links_y_productos
-        
+
         except Exception as e:
             return {"error": str(e)}
+    
+### Confirm Payment method ###
+    async def find_stripe_payment(self, stripe_payment_id: str):
+        strpe_payment_info_by_id = await self.repository.payment.find_first(where={"stripe_payment_id": stripe_payment_id})
+        if not strpe_payment_info_by_id:
+                raise HTTPException(status_code=404, detail="Payment ID not found")
+        return strpe_payment_info_by_id
+
+    async def stripe_payment_confirm(self, payment_intent_id: str, payment_method: str):
+        try:      
+            result = stripe.PaymentIntent.confirm(payment_intent_id, payment_method=payment_method, return_url="https://www.example.com",), 
+
+            # Desempaquetar y obtener los valores JSON
+            *other, jsonvals = result
+            jsonvals = dict(jsonvals)
+            print('-----------------------------')
+            print(type(jsonvals))
+            print(f"result stripe_payment_confirm: {jsonvals}")
+             # Consultar la información de pago
+            stripe_payment_info = await self.find_stripe_payment(payment_intent_id)
+            print("_________________________________________")
+            print(f"stripe_payment_info query: {stripe_payment_info}")
+            stripe_payment_method = jsonvals['payment_method_types']
+            payment_status = jsonvals['status']
+            print(f"stripe_payment_id {stripe_payment_info.stripe_payment_id}")
+            stripe_payment_info.stripe_payment_id = 'opera'
+            print(f"stripe_payment_info_: {stripe_payment_info}")
+            print("_________________________________________")
+            print(f"stripe payment method: {stripe_payment_method}")
+            print(f"payment status: {payment_status}")
+            print("_________________________________________")
+            # Actualizar el diccionario con los nuevos valores
+            stripe_payment_info.payment_method_types = 'Fisico'
+            a = stripe_payment_info.payment_method_types
+    
+            # a = ', '.join(a)
+            print(f"stripe_payment_info after: {a}")
+            print(f"stripe payment method: {stripe_payment_method}")
+            print(f"payment status: {payment_status}")
+            b = ', '.join(stripe_payment_method)
+            c = payment_status
+            # Actualizar en base de datos (descomenta la siguiente línea si es necesario)
+            await self.repository.payment.update(data = 
+                                                 {"payment_method_types": b, "status": payment_status}, 
+                                                  where={"id": stripe_payment_info.id })
+            return result
+        except Exception as ex:
+            return {"message": f"An error has ocurred {ex}"}
+

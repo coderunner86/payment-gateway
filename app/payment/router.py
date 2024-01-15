@@ -40,10 +40,13 @@ async def create_payment(payment: CreatePayment, payment_service: PaymentService
 async def stripe_payment_confirm(payment_intent_id: str, payment_service: PaymentService = Depends()):
     payment_method = 'pm_card_visa'
     result = await payment_service.stripe_payment_confirm(payment_intent_id, payment_method)
-    status_code = 200
-    if status_code != 200:
+    if result is not None:
+        status_code = 200
+        stripe_payment_id = payment_intent_id
+        return result 
+    else:
         raise HTTPException(status_code=400, detail=result)
-    return result
+    
     
 
 @router.put("/{id}")

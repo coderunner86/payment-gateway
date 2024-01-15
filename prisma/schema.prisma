@@ -53,6 +53,9 @@ model Payment {
   user       User     @relation(fields: [user_id], references: [id])
   product    Product  @relation(fields: [product_id], references: [id])
   accepted   Boolean  @default(false)
+  stripe_payment_id String?   @default("pi_default")
+  status     String?   @default("rejected")
+  payment_method_types String? @default("card")
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 

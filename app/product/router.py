@@ -1,15 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends
 from app.product.services import CreateProduct, UpdateProduct, ProductService
-from fastapi.responses import HTMLResponse
-from starlette.templating import Jinja2Templates
-
-
-#stripe imports
-# from app.stripe_integration.stripe_products import get_payment_links
-
-
-# templates = Jinja2Templates(directory="app/templates")
-
 
 product_service = ProductService
 
@@ -18,13 +8,6 @@ router = APIRouter(
     tags=["products"],
     dependencies=[Depends(product_service)]
 )
-
-
-# @router.get("/catalog",response_class=HTMLResponse)
-# async def payment_links(request: Request):
-#     products_links =  await get_payment_links()
-#     return templates.TemplateResponse("catalog.html",context={"request":request, "products_links": products_links})
-
 
 @router.get("/{id:int}")
 async def get_user(id: int, product_service: ProductService = Depends()):
