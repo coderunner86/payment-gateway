@@ -13,7 +13,7 @@ from app.user.services import UserService
 from app.settings.database import database
 
 from app.auth.hashing import Hasher
-
+import uuid
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(
     prefix="/users",
@@ -55,12 +55,16 @@ async def login(email: str = Form(...), password: str = Form(...)):
         found = True
         if found and verified:
             print('Welcome',retrieve_user.email)
+            print('UID',retrieve_user.id)
+            session_id = str(uuid.uuid4())
+            session_id=session_id.replace('-', '')
             token: str = create_token(user.dict())
-            print(token)
-            response = Response('/login')
-            response.set_cookie(key="token", value=token, httponly=True, secure=True)
+            print("token:", token)
+            print("session_id:", session_id)
+            response = Response('/users/dashboard')
+            response.set_cookie(key="session_id", value=token, httponly=True, secure=True)
             redirect_response = RedirectResponse(url='/api/users/dashboard', status_code=303)
-            session_id = None
+            # session_id = None
             redirect_response.set_cookie(key="token", value=token, httponly=True, secure=True)
             return redirect_response if session_id != None else token  
         else:
