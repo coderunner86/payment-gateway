@@ -61,12 +61,14 @@ async def login(email: str = Form(...), password: str = Form(...)):
             token: str = create_token(user.dict())
             print("token:", token)
             print("session_id:", session_id)
-            response = Response('/users/dashboard')
-            response.set_cookie(key="session_id", value=token, httponly=True, secure=True)
+            response = Response('/login')
+            response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
+            redirect_home = RedirectResponse(url='/api/users/login', status_code=303)
             redirect_response = RedirectResponse(url='/api/users/dashboard', status_code=303)
             # session_id = None
-            redirect_response.set_cookie(key="token", value=token, httponly=True, secure=True)
-            return redirect_response if session_id != None else token  
+            redirect_response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
+            return redirect_response if session_id != None else redirect_home  
+            # return redirect_response if session_id != None else token  
         else:
             raise HTTPException(status_code=400, detail="Invalid credentials")
         
