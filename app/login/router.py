@@ -13,7 +13,7 @@ from app.user.services import UserService
 from app.settings.database import database
 
 from app.auth.hashing import Hasher
-import uuid
+from app.helpers.session import create_session
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(
     prefix="/users",
@@ -54,21 +54,22 @@ async def login(email: str = Form(...), password: str = Form(...)):
         print(verified)
         found = True
         if found and verified:
+            uid = retrieve_user.id
             print('Welcome',retrieve_user.email)
             print('UID',retrieve_user.id)
-            session_id = str(uuid.uuid4())
-            session_id=session_id.replace('-', '')
+            session_id = create_session(uid)
             token: str = create_token(user.dict())
             print("token:", token)
             print("session_id:", session_id)
             response = Response('/login')
             response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
-            redirect_home = RedirectResponse(url='/api/users/login', status_code=303)
-            redirect_response = RedirectResponse(url='/api/users/dashboard', status_code=303)
-            # session_id = None
+            response.set_cookie(key="token", value=token, httponly=True, secure=True)
+            redirect_home = RedirectResponse(url='/login', status_code=303)
+            redirect_response = RedirectResponse(url='/dashboard', status_code=303)
             redirect_response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
+            redirect_response.set_cookie(key="token", value=token, httponly=True, secure=True)
             return redirect_response if session_id != None else redirect_home  
-            # return redirect_response if session_id != None else token  
+    
         else:
             raise HTTPException(status_code=400, detail="Invalid credentials")
         
