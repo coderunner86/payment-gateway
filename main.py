@@ -22,7 +22,8 @@ from app.middlewares.jwt_handler import JWTBearer
 
 #stripe imports
 from app.stripe_integration.stripe_users import get_customers_info
-
+from app.stripe_integration.stripe_products import get_payment_links
+from app.stripe_integration.stripe_payments import get_payment_info
 env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 
@@ -40,15 +41,54 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 async def customers_dashboard(request: Request):
     session_id = request.cookies.get("session_id")
     token = request.cookies.get("token")
-    print("received token",token)
     if not token or not session_id:
         return RedirectResponse(url='/login', status_code=303)
     users = await get_customers_info()
     return templates.TemplateResponse("dashboard.html", context={"request": request, "users": users})
 
+@app.get("/thankyou", response_class=HTMLResponse)
+async def customers_dashboard(request: Request):
+    token = request.cookies.get("token")
+    session_id = request.cookies.get("session_id")
+    if not token or not session_id:
+        return RedirectResponse(url='/login', status_code=303)
+    return templates.TemplateResponse("thankyou.html", context={"request": request})
+
 @app.get('/login', response_class=HTMLResponse)
 async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
+
+@app.get("/catalog", response_class=HTMLResponse)
+async def payment_links(request: Request):
+    token = request.cookies.get("token")
+    session_id = request.cookies.get("session_id")
+    if not token or not session_id:
+        return RedirectResponse(url='/login', status_code=303)
+    products_links = await get_payment_links()
+    return templates.TemplateResponse(
+        "catalog.html", context={"request": request, "products_links": products_links}
+    )
+
+
+@app.get("/payments", response_class=HTMLResponse)
+async def payment_info(request: Request):
+    session_id = request.cookies.get("session_id")
+    token = request.cookies.get("token")
+    if not token or not session_id:
+        return RedirectResponse(url='/login', status_code=303)
+    products = await get_payment_info()
+    return templates.TemplateResponse(
+        "payments.html", context={"request": request, "products": products}
+    )
+
+@app.get("/logout")
+def logout(request: Request):
+    response = RedirectResponse(url='/login', status_code=303)
+    response.delete_cookie("token")
+    response.delete_cookie("session_id")
+    return response
+
 
 
 @app.on_event("startup")

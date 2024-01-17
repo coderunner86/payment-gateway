@@ -1,14 +1,78 @@
-
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Buyed Products</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+        </style>
+    </head>
+<body>
     <!-- Navigation -->
-    <nav class="bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-white font-semibold text-lg">Buyed Ebooks</h1>
-                    </div>
-                    
+<nav class="bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo and Image -->
+            <div class="flex-shrink-0">
+                <img class="object-cover object-center rounded" alt="Imagen de developer hero" src="/static/images/devhero.png" width="50" height="50" />
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+                    <!-- Example of a navigation link -->
+                    <a href="/catalog" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Catalog</a>
+                    <a href="/dashboard" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    <a href="/payments" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Payments</a>
+                    <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+    <div id="catalog">
+
+<!-- Main Content -->
+<div class="container mx-auto mt-8">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Payment information</h2>
+      
+           <!-- Bootstrap Table -->
+<div class="container mt-4">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID del Pago</th>
+               
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Moneda</th>
+                <th>Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                  
+                    <td>${{ product.amount }}</td>
+                    <td>{{ product.status }}</td>
+                    <td>{{ product.currency }}</td>
+                    <td>{{ product.payment_method_types }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+      
+    </div>
+</div>
+
+
+    </div>
+</body>
+</html>

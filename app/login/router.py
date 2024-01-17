@@ -47,29 +47,26 @@ async def login(email: str = Form(...), password: str = Form(...)):
     user = UserLogin(email=email, password=password)
     retrieve_user = await UserService().find_user_by_email(email=user.email)
     if not retrieve_user:
-        found = False #to check if email exists in the database or not, if not then raise an exception to break
         raise HTTPException(status_code=400, detail="Email not found")
     else:
         verified = Hasher.verify_password(plain_password=user.password, hashed_password=retrieve_user.password)
-        print(verified)
-        found = True
-        if found and verified:
+        if verified:
             uid = retrieve_user.id
             print('Welcome',retrieve_user.email)
             print('UID',retrieve_user.id)
             session_id = create_session(uid)
+            
             token: str = create_token(user.dict())
             print("token:", token)
             print("session_id:", session_id)
-            response = Response('/login')
+            redirect_home = RedirectResponse(url='/login', status_code=303)
+            
+            response = RedirectResponse(url='/dashboard', status_code=303)
             response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
             response.set_cookie(key="token", value=token, httponly=True, secure=True)
-            redirect_home = RedirectResponse(url='/login', status_code=303)
-            redirect_response = RedirectResponse(url='/dashboard', status_code=303)
-            redirect_response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
-            redirect_response.set_cookie(key="token", value=token, httponly=True, secure=True)
-            return redirect_response if session_id != None else redirect_home  
+            return response if session_id != None else redirect_home  
     
         else:
-            raise HTTPException(status_code=400, detail="Invalid credentials")
+            detail = "Invalid credentials"
+            raise HTTPException(status_code=400, detail=detail)
         

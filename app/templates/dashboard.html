@@ -12,20 +12,28 @@
 </head>
 
     <!-- Navigation -->
-    <nav class="bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <img class="object-cover object-center rounded" alt="Imagen de developer hero" src="/static/images/devhero.png" width="50" height="50" />
-                        
-                    </div>
-                
-                    
+<nav class="bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo and Image -->
+            <div class="flex-shrink-0">
+                <img class="object-cover object-center rounded" alt="Imagen de developer hero" src="/static/images/devhero.png" width="50" height="50" />
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+                    <!-- Example of a navigation link -->
+                    <a href="/catalog" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Catalog</a>
+                    <a href="/dashboard" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    <a href="/payments" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Payments</a>
+                    <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+
 <body class="bg-gray-100">
     <div class="container mx-auto mt-8">
         <div class="bg-white shadow-lg rounded-lg p-6 mb-8">

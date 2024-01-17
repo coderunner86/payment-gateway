@@ -35,7 +35,7 @@ model StripeUser {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   stripeProductId String? @unique
   name        String
   description String?
