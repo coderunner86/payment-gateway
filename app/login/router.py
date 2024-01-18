@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Request, Form
 from fastapi import HTTPException
 
@@ -14,6 +13,7 @@ from app.settings.database import database
 
 from app.auth.hashing import Hasher
 from app.helpers.session import create_session
+
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(
     prefix="/users",
@@ -28,7 +28,9 @@ Successful response: HTMLResponse with the content of the login form.
 Input parameters:
   - request: Request object of type Request from FastAPI used to receive the HTTP request.
 """
-@router.get('/login', response_class=HTMLResponse)
+
+
+@router.get("/login", response_class=HTMLResponse)
 async def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
@@ -41,32 +43,42 @@ Successful response: RedirectResponse that redirects the user to the dashboard p
 Input parameters:
   - email: String representing the user's email.
   - password: String representing the user's password.
-"""    
-@router.post('/login')
-async def login(email: str = Form(...), password: str = Form(...)):
+"""
+
+
+@router.post("/login")
+async def login(
+    email: str = Form(...),
+    password: str = Form(...)
+    ):
+    
     user = UserLogin(email=email, password=password)
     retrieve_user = await UserService().find_user_by_email(email=user.email)
     if not retrieve_user:
-        raise HTTPException(status_code=400, detail="Email not found")
+        alert = "Email not found!"
+        return {"alert": alert}
     else:
-        verified = Hasher.verify_password(plain_password=user.password, hashed_password=retrieve_user.password)
+        verified = Hasher.verify_password(
+            plain_password=user.password, hashed_password=retrieve_user.password
+        )
         if verified:
             uid = retrieve_user.id
-            print('Welcome',retrieve_user.email)
-            print('UID',retrieve_user.id)
+            print("Welcome", retrieve_user.email)
+            print("UID", retrieve_user.id)
             session_id = create_session(uid)
-            
+
             token: str = create_token(user.dict())
             print("token:", token)
             print("session_id:", session_id)
-            redirect_home = RedirectResponse(url='/login', status_code=303)
-            
-            response = RedirectResponse(url='/dashboard', status_code=303)
-            response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True)
+            redirect_home = RedirectResponse(url="/login", status_code=303)
+
+            response = RedirectResponse(url="/dashboard", status_code=303)
+            response.set_cookie(
+                key="session_id", value=session_id, httponly=True, secure=True
+            )
             response.set_cookie(key="token", value=token, httponly=True, secure=True)
-            return response if session_id != None else redirect_home  
-    
+            return response if session_id != None else redirect_home
+
         else:
-            detail = "Invalid credentials"
-            raise HTTPException(status_code=400, detail=detail)
-        
+            alert = "Invalid credentials!"
+            return {"alert": alert}
