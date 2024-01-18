@@ -11,12 +11,12 @@ router = APIRouter(
     tags=["payments"]
 )
  
-@router.get("/payment_links", tags=['payment_links'], status_code=200, dependencies=[Depends(JWTBearer())])
+@router.get("/payment_links", tags=['payment_controller_links'], status_code=200, dependencies=[Depends(JWTBearer())])
 async def get_all_payment_links():
     response = await get_payment_links()
-    return JSONResponse(status_code=200, content=response)
+    return response
 
-@router.get("/payment_info", tags=['payment_links'], status_code=200, dependencies=[Depends(JWTBearer())])
+@router.get("/payment_info", tags=['payment_controller_links'], status_code=200, dependencies=[Depends(JWTBearer())])
 async def payment_info():
     response = await get_payment_info()
     return JSONResponse(status_code=200, content=response)
