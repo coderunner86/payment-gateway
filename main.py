@@ -24,6 +24,9 @@ from app.middlewares.jwt_handler import JWTBearer
 from app.stripe_integration.stripe_users import get_customers_info
 from app.stripe_integration.stripe_products import get_payment_links
 from app.stripe_integration.stripe_payments import get_payment_info
+
+from app.register.router import register
+
 env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 
@@ -34,7 +37,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.add_middleware(ErrorHamdler)
 
 templates = Jinja2Templates(directory="app/templates")
-
+register_templates = Jinja2Templates(directory="app/register")
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 @app.get("/dashboard", response_class=HTMLResponse)
@@ -47,7 +50,7 @@ async def customers_dashboard(request: Request):
     return templates.TemplateResponse("dashboard.html", context={"request": request, "users": users})
 
 @app.get("/thankyou", response_class=HTMLResponse)
-async def customers_dashboard(request: Request):
+def customers_dashboard(request: Request):
     token = request.cookies.get("token")
     session_id = request.cookies.get("session_id")
     if not token or not session_id:
@@ -55,7 +58,7 @@ async def customers_dashboard(request: Request):
     return templates.TemplateResponse("thankyou.html", context={"request": request})
 
 @app.get('/login', response_class=HTMLResponse)
-async def login_form(request: Request):
+def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
@@ -88,6 +91,12 @@ def logout(request: Request):
     response.delete_cookie("token")
     response.delete_cookie("session_id")
     return response
+
+
+@app.get('/register', response_class=HTMLResponse)
+def register_form(request: Request):
+    response = register(request)
+    return templates.TemplateResponse("register.html", {"request": request})
 
 
 
