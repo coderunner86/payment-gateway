@@ -24,10 +24,13 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Example of a navigation link -->
                     <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/recommendation">AskGPT</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                        <a class="nav-link" href="/books">Books</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/payments">Payments</a>
@@ -40,7 +43,7 @@
         </div>
     </nav>
     <div class="container mt-5">
-        <label for="question">Ask about some book:</label>
+        <label for="question">Ask about some book you want to buy:</label>
         <input type="text" id="question" class="form-control mb-2" placeholder="Type your question...">
         <button onclick="askGPT()" class="btn btn-primary">I want to know</button>
         <div class="mt-3">
@@ -80,11 +83,17 @@
     <div class="container mx-auto mt-8">
         <div id="bookCarousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
-                {% for url, nombre in links_y_productos.items() %}
+                {% for link, nombre, imagen, desc in links_y_productos %}
                 <div class="carousel-item {% if loop.first %}active{% endif %}">
                     <div class="d-flex align-items-center justify-content-center">
                         <div>
                             <h3>{{ nombre }}</h3>
+                            {% if imagen %}
+                            <img src="{{ imagen }}" alt="Imagen de un libro" class="img-thumbnail">
+                        {% else %}
+                            <!-- Puedes mostrar un marcador de posición o un mensaje si no hay imagen -->
+                            No hay imagen disponible
+                        {% endif %}
                             <div class="d-flex align-items-center justify-content-center">
                                 <a href="{{ url }}" class="btn btn-success">Buy Now</a>
                             </div>

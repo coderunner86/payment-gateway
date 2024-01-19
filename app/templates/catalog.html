@@ -1,186 +1,110 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecommerce de Ebooks</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-       <script>
-        // Función para copiar el nombre del producto al portapapeles
-        function copyToClipboard(element) {
-            const tempInput = document.createElement('input');
-            tempInput.value = element.textContent;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            // alert('Nombre del producto copiado: ' + tempInput.value); // Opcional: Muestra un mensaje de confirmación
-        }
-    </script>
-
-<script>
-    // Función para copiar el nombre del producto al portapapeles
-    function copyToClipboard(element) {
-        const tempInput = document.createElement('input');
-        tempInput.value = element.textContent;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-    }
-
-    // Función para hacer una solicitud a la API de OpenAI y mostrar la respuesta
-    async function askGPT(question) {
-    try {
-        const response = await fetch('https://api.openai.com/v1/engines/text-embedding-ada-002/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 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' // Reemplazar con tu clave API de OpenAI
-            },
-            body: JSON.stringify({
-                prompt: question,
-                temperature: 0.7,
-                max_tokens: 60
-            })
-        });
-        const data = await response.json();
-        document.getElementById('gptResponse').innerText = data.choices[0].text;
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('gptResponse').innerText = 'Error al obtener respuesta de GPT.';
-    }
-}
-
-
-
-     // Event listener para el formulario de GPT
-     document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('gptForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const question = this.querySelector('input[type="text"]').value; // Cambio realizado aquí
-                askGPT(question);
-            });
-        });
-</script>
-</head> 
-    <body class="bg-gray-100">
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <!-- Incluye Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <!-- Logo and Image -->
+                <a class="navbar-brand" href="#">
+                    <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
+                        alt="Imagen de developer hero">
+                </a>
     
-   <!-- Navigation -->
-<nav class="bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-            <!-- Logo and Image -->
-            <div class="flex-shrink-0">
-                <img class="object-cover object-center rounded" alt="Imagen de developer hero" src="/static/images/devhero.png" width="50" height="50" />
-            </div>
-
-            <!-- Navigation Links -->
-            <div class="hidden md:block">
-                <div class="ml-10 flex items-baseline space-x-4">
-                    <!-- Example of a navigation link -->
-                    <a href="/catalog" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Catalog</a>
-                    <a href="/dashboard" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="/payments" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Payments</a>
-                    <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+                <!-- Navigation Links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Example of a navigation link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/recommendation">AskGPT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/books">Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/payments">Payments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
-</nav>
+        </nav>
+    <div id="catalog">
 
-    
-        <!-- Main Content -->
-        <div class="container mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Books List -->
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Libros Populares</h2>
-                <ul class="list-disc list-inside">
-                    <!-- Placeholder for loop -->
-                    <li class="mb-2">
-                        <a href="#" class="text-blue-600 hover:text-blue-800 transition duration-300">Nombre del Producto</a>
-                        <!-- Ask GPT Form -->
-                     
-            <form id="gptForm" class="mt-2"> <!-- Asegúrate de que el id del formulario sea 'gptForm' -->
-                <input type="text" placeholder="Ask GPT about this book?" class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 focus:outline-none focus:shadow-outline">Ask</button>
-            </form>
-                    </li>
-                    <!-- Repeat for each product -->
-                </ul>
-            </div>
-    
-            <!-- GPT Response Box -->
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Ask GPT</h2>
-                <p class="text-gray-600">Type your questions about the books into the box, and GPT will provide you with more information and insights.</p>
-                <!-- The actual GPT response will be displayed here -->
-                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <p class="text-gray-800">GPT Response will be displayed here after asking questions.</p>
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-header bg-primary text-white justify-content-center">
-                                         <h3><br>Tu recomendacion:
-                                          <em></em></h3> 
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-text">Tags:</p>
-                                        <div class="d-flex flex-wrap">
-                                  
-                                            <span class="badge badge-primary m-1">Textos para ti</span>
-                                     
-                                        </div>
-                                        <div class="d-flex flex-wrap">
-                                            <p class="ad-text">"{{ recommendation }}"</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <form action="/submit_action" method="post">
-                                            <input type="hidden" name="last_id" value="last_id">
-                                            <button type="submit" class="btn btn-primary mr-2" name="action"
-                                                value="accept">Aceptar</button>
-                                            <button type="submit" class="btn btn-secondary" name="action"
-                                                value="reject">Rechazar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                         
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-    </body>
-    </html>
-    
-    <!-- Main Content -->
-    <div class="container mx-auto mt-8">
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Libros Populares</h2>
-            <ul class="list-disc list-inside">
-                {% for url, nombre in links_y_productos.items() %}
-                <li class="mb-2 flex items-center">
-                    <a href="{{ url }}" class="text-blue-600 hover:text-blue-800 transition duration-300 mr-2">{{ nombre }}</a>
-                    <button onclick="copyToClipboard(this.previousElementSibling)" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+<!-- Main Content -->
+<div class="container mx-auto mt-8">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Books Information</h2>
+      
+           <!-- Bootstrap Table -->
+<div class="container mt-4">
+<!-- recommendation.html -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for link, nombre, imagen, desc in links_y_productos %}
+            <tr>
 
+                <td>
+                    {% if imagen %}
+                        <img src="{{ imagen }}" alt="Imagen de un libro" class="img-thumbnail">
+                    {% else %}
+                        <!-- Puedes mostrar un marcador de posición o un mensaje si no hay imagen -->
+                        No hay imagen disponible
+                    {% endif %}
+                </td>
+                <td>{{ nombre }}</td>
+                <td>
+                    <a href="{{ link }}" class="text-blue-600 hover:text-blue-800 transition duration-300 mr-2">{{ desc }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+                            
+                               
+<p>
+
+
+
+
+
+                                        
+
+
+</p>
+
+
+
+
+
+      
+    </div>
+</div>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
-<footer><h1 class="text-white font-semibold text-lg">Codebooks</h1></footer>
+<footer class="footer mt-auto py-3 bg-dark text-white text-center">
+    <h1>Codebook</h1>
+</footer>
 </html>
