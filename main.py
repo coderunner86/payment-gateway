@@ -2,7 +2,7 @@ import os
 import stripe
 import uvicorn
 
-from fastapi import FastAPI, Request, Depends, Response, HTTPException
+from fastapi import FastAPI, Request
 
 
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from app.settings.database import database
 from app.settings.environment import settings
 from app.settings.routers import routers
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
@@ -18,7 +18,6 @@ from fastapi.templating import Jinja2Templates
 
 
 from app.middlewares.error_handler import ErrorHamdler
-from app.middlewares.jwt_handler import JWTBearer
 
 #stripe imports
 from app.stripe_integration.stripe_users import get_customers_info
@@ -26,8 +25,6 @@ from app.stripe_integration.stripe_products import get_payment_links
 from app.stripe_integration.stripe_payments import get_payment_info
 
 from app.register.router import register
-
-from app.engine.open_ai_request import recommend_book
 
 env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
@@ -64,27 +61,23 @@ def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
-@app.get("/catalog", response_class=HTMLResponse)
+@app.get("/recommendation", response_class=HTMLResponse)
 async def payment_links(request: Request):
     token = request.cookies.get("token")
     session_id = request.cookies.get("session_id")
     if not token or not session_id:
         return RedirectResponse(url='/login', status_code=303)
 
-    # Obtén los enlaces y productos
     links_y_productos, productos = await get_payment_links()
-    recommendation = recommend_book(productos)
 
     return templates.TemplateResponse(
-        "catalog.html", 
+        "recommendation.html", 
         context={
             "request": request, 
             "links_y_productos": links_y_productos,
             "productos": productos,
-            "recommendation": recommendation  # Asegúrate de tener la función get_openai_response() definida
         }
     )
-
 
 @app.get("/payments", response_class=HTMLResponse)
 async def payment_info(request: Request):
