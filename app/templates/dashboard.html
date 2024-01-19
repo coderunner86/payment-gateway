@@ -1,106 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <title>Customer Details</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-</head>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Incluye Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
     <!-- Navigation -->
-<nav class="bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
             <!-- Logo and Image -->
-            <div class="flex-shrink-0">
-                <img class="object-cover object-center rounded" alt="Imagen de developer hero" src="/static/images/devhero.png" width="50" height="50" />
-            </div>
+            <a class="navbar-brand" href="#">
+                <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
+                    alt="Imagen de developer hero">
+            </a>
 
             <!-- Navigation Links -->
-            <div class="hidden md:block">
-                <div class="ml-10 flex items-baseline space-x-4">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
                     <!-- Example of a navigation link -->
-                    <a href="/catalog" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Catalog</a>
-                    <a href="/dashboard" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="/payments" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Payments</a>
-                    <a href="/logout" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recommendation">AskGPT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/payments">Payments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <body class="bg-light">
+        <div class="container mt-3">
+            <div class="bg-white shadow p-3 mb-3 rounded">
+                <h2 class="text-center mb-4">Agregar nuevo usuario</h2>
+                <form id="addUserForm">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="name" placeholder="Nombre del Usuario">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email">
+                    </div>
+                    <!-- Agregar aquí otros campos necesarios para Stripe -->
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-primary" onclick="addUser()">Agregar Usuario</button>
+                    </div>
+                </form>
+            </div>
+    
+            <div class="container mt-3">
+                <div class="bg-white shadow p-3 rounded">
+                    <h1 class="text-center mb-4">Registered Customers</h1>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">CUS</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cus_id, details in users.items() %}
+                            <tr>
+                                <td>{{ cus_id }}</td>
+                                <td>{{ details.name }}</td>
+                                <td>{{ details.email }}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteUser('{{ cus_id }}')">Delete</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="updateUser('{{ cus_id }}')">Update</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
-</nav>
+                                
+                               
+        <p>
 
-<body class="bg-gray-100">
-    <div class="container mx-auto mt-8">
-        <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Agregar nuevo usuario</h2>
-            <form id="addUserForm">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                        Nombre
-                    </label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Nombre del Usuario">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-                        Email
-                    </label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email">
-                </div>
-                <!-- Agregar aquí otros campos necesarios para Stripe -->
-                <div class="flex items-center justify-between">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="addUser()">
-                        Agregar Usuario
-                    </button>
-                </div>
-            </form>
-        </div>
-    <div class="container mx-auto mt-8">
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h1 class="text-2xl font-semibold text-center text-gray-800 mb-4">Registered Customers</h1>
-            <table class="min-w-full leading-normal">
-                <thead>
-                    <tr>
-                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">CUS</th>
-                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
-                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
-                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cus_id, details in users.items() %}
-                    <tr>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cus_id }}</td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ details.name }}</td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ details.email }}</td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <button class="text-red-500 hover:text-red-700" onclick="deleteUser('{{ cus_id }}')">Delete</button>
-                            <button class="text-blue-500 hover:text-blue-700" onclick="updateUser('{{ cus_id }}')">Update</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-    <script>
-        function deleteUser(cusId) {
-            // Add JavaScript code to handle user deletion
-            console.log("Delete user with ID:", cusId);
-        }
 
-        function updateUser(cusId) {
-            // Add JavaScript code to handle user update
-            console.log("Update user with ID:", cusId);
-        }
-    </script>
-</body>
-<footer>    <div class="flex-shrink-0">
-    <h1 class="text-white font-semibold text-lg">Codebooks</h1>
-</div></footer>
+
+
+                                        
+
+
+        </p>
+
+
+
+
+        <script>
+            function deleteUser(cusId) {
+                // Add JavaScript code to handle user deletion
+                console.log("Delete user with ID:", cusId);
+            }
+    
+            function updateUser(cusId) {
+                // Add JavaScript code to handle user update
+                console.log("Update user with ID:", cusId);
+            }
+        </script>
+    </body>
+    
+    <footer class="footer mt-auto py-3 bg-dark text-white text-center">
+        <h1>Codebook</h1>
+    </footer>
+    
 </html>
