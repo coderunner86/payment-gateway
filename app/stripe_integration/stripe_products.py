@@ -26,10 +26,15 @@ async def get_payment_links():
             
             shift_productos = [productos[i-2] for i in shift_linarray]
             productos_invertidos = shift_productos[::1]
+            images = [product.images for product in stripe.Product.list(limit=100).data]  
+
+            desc = [product.description for product in stripe.Product.list(limit=100).data]  
+            desc_invertidos = list.reverse(desc)
+            shift_desc = [desc[i-2] for i in shift_linarray]
+            desc_invertidos = shift_desc[::1]                
+            links_y_productos = [(link, nombre, imagen, desc) for link, nombre, imagen, desc in zip(links, productos_invertidos, images, desc_invertidos)]
             
-            links_y_productos = dict(zip(links, productos_invertidos))
-            
-            return links_y_productos, productos
+            return links_y_productos
 
         except Exception as e:
             return {"error": str(e)}
