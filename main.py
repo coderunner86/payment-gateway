@@ -27,6 +27,8 @@ from app.stripe_integration.stripe_payments import get_payment_info
 
 from app.register.router import register
 
+from app.engine.open_ai_request import recommend_book
+
 env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 
@@ -68,9 +70,19 @@ async def payment_links(request: Request):
     session_id = request.cookies.get("session_id")
     if not token or not session_id:
         return RedirectResponse(url='/login', status_code=303)
-    products_links = await get_payment_links()
+
+    # Obtén los enlaces y productos
+    links_y_productos, productos = await get_payment_links()
+    recommendation = recommend_book(productos)
+
     return templates.TemplateResponse(
-        "catalog.html", context={"request": request, "products_links": products_links}
+        "catalog.html", 
+        context={
+            "request": request, 
+            "links_y_productos": links_y_productos,
+            "productos": productos,
+            "recommendation": recommendation  # Asegúrate de tener la función get_openai_response() definida
+        }
     )
 
 
