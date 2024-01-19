@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 @router.get("/{id:int}")
-async def get_user(id: int, product_service: ProductService = Depends()):
+async def get_product(id: int, product_service: ProductService = Depends()):
     return await product_service.find_product(product_id=id)
 
 @router.get("/all_products")
