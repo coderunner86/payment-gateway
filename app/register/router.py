@@ -34,23 +34,26 @@ async def register(
             retrieve_user = await UserService().find_user_by_email(email=user.email)
             if retrieve_user == None:
                 users_id = await UserService().find_all_user()
-                last_user_id = users_id[-1].id
-                uid = last_user_id + 1
-                session_id = create_session(uid)
-                token: str = create_token(user.dict())
-                response = RedirectResponse(url="/dashboard", status_code=303)
-                response.set_cookie(
-                key="session_id", value=session_id, httponly=True, secure=True
-            )
-                response.set_cookie(key="token", value=token, httponly=True, secure=True)
-                
-                try: 
-                    result = await UserService().create_user(user)
-                    print("This is the result when we create a user", result)
-                    return  response
-                except Exception as ex:
-                    return(f'{"This error is when we try to create the user": str(ex)}')
+                if not users_id:
+                    first_user = await UserService().create_user(user) 
+                else:
+                    last_user_id = users_id[-1].id
+                    uid = last_user_id + 1
+                    session_id = create_session(uid)
+                    token: str = create_token(user.dict())
+                    response = RedirectResponse(url="/dashboard", status_code=303)
+                    response.set_cookie(
+                    key="session_id", value=session_id, httponly=True, secure=True
+                )
+                    response.set_cookie(key="token", value=token, httponly=True, secure=True)
                     
+                    try: 
+                        result = await UserService().create_user(user)
+                        print("This is the result when we create a user", result)
+                        return  response
+                    except Exception as ex:
+                        return(f'{"This error is when we try to create the user": str(ex)}')
+                        
             elif retrieve_user.email == user.email:
                 print("retrieve_user",retrieve_user.email)
                 exist = retrieve_user.email
