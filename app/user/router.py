@@ -10,19 +10,21 @@ router = APIRouter(
     dependencies=[Depends(user_service)]
 )
 
-@router.get("")
-async def get_all_users(user_service: UserService = Depends()):
-    return await user_service.find_all_user()
-
 @router.get("/{id:int}")
 async def get_user(id: int, user_service: UserService = Depends()):
     return await user_service.find_user(user_id=id)
+
 
 @router.get("/{email:str}")
 async def get_user_by_email(email: str, user_service: UserService = Depends()):
     return await user_service.find_user_by_email(email=email)
 
-@router.post("/")
+
+@router.get("/all_users")
+async def get_all_users(user_service: UserService = Depends()):
+    return await user_service.find_all_user()
+
+@router.post("/new")
 async def create_user(user: CreateUser, user_service: UserService=Depends()):
     try:
         new_user = await user_service.create_user(user)
