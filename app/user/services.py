@@ -20,7 +20,8 @@ class CreateStripeUser(BaseModel):
 
 class UpdateUser(BaseModel):
     name: str
-    last_name: str
+    email: str
+    password: str
 
 class UserService:
     def __init__(self):
@@ -58,9 +59,13 @@ class UserService:
 
     async def update_user(self, user_id: int, user: UpdateUser):
         try:
+            encripted_password = Hasher.get_password_hash(user.password)
+            user_data = user.dict()
+            user_data['password'] = encripted_password
+
             result = await self.repository.user.update(
                 where={"id": user_id},
-                data=user.dict(),
+                data=user_data,
              
             )
             return {"message": f'User {user_id} updated successfully', "result": result}
