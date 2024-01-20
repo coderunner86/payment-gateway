@@ -106,9 +106,27 @@
 
 
         <script>
-            function deleteUser(cusId) {
-                // Add JavaScript code to handle user deletion
-                console.log("Delete user with ID:", cusId);
+            async function deleteUser(cus_id) {
+                try {
+                var response = await fetch(`/api/users/cus/${cus_id}`, {
+                    method: 'GET'
+                });
+                if (!response.ok) {
+                    throw new Error('Not found user');
+                }
+                const user = await response.json();
+                console.log(user);
+                response = await fetch(`/api/users/${user}`, {
+                    method: 'DELETE'
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to delete user');
+                }
+                console.log('User deleted successfully'); 
+            } catch (error) {
+                console.error('Failed to delete user:', error);
+            }
+                
             }
     
             function updateUser(cusId) {
