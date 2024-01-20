@@ -19,8 +19,8 @@ model User {
   last_name  String?
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
-  Payment    Payment[]
-  StripeUser StripeUser? // Relación uno a uno con StripeUser
+  Payment    Payment[]   
+  StripeUser StripeUser?
 
   @@map("users")
 }
@@ -28,8 +28,8 @@ model User {
 model StripeUser {
   id       Int    @id @default(autoincrement())
   cus_id   String @unique
-  user     User   @relation(fields: [user_id], references: [id])
-  user_id  Int    @unique
+  user     User?  @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id  Int?    @unique
 
   @@map("stripe_users")
 }
@@ -50,7 +50,7 @@ model Product {
 model Payment {
   id         Int      @id @default(autoincrement())
   amount     Int
-  user       User     @relation(fields: [user_id], references: [id])
+  user     User?  @relation(fields: [user_id], references: [id], onDelete: SetNull)
   product    Product  @relation(fields: [product_id], references: [id])
   accepted   Boolean  @default(false)
   stripe_payment_id String?   @default("pi_default")
@@ -59,7 +59,7 @@ model Payment {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user_id    Int
+  user_id    Int?
   product_id Int
 
   @@map("payments")
