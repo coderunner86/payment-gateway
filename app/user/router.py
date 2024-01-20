@@ -20,7 +20,7 @@ async def get_user_by_email(email: str, user_service: UserService = Depends()):
     return await user_service.find_user_by_email(email=email)
 
 
-@router.get("/all_users")
+@router.get("")
 async def get_all_users(user_service: UserService = Depends()):
     return await user_service.find_all_user()
 
