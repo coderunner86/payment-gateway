@@ -33,6 +33,11 @@ class UserService:
     async def find_user_by_email(self,  email: str):
         result = await self.repository.user.find_first(where={"email": email})
         return result
+    
+    async def find_user_cus(self, cus_id: str):
+        result = await self.repository.stripeuser.find_first(where={"cus_id": cus_id})
+        return result.user_id
+
     async def find_all_user(self):
         result = await self.repository.user.find_many(
         )

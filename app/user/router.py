@@ -19,6 +19,9 @@ async def get_user(id: int, user_service: UserService = Depends()):
 async def get_user_by_email(email: str, user_service: UserService = Depends()):
     return await user_service.find_user_by_email(email=email)
 
+@router.get("/cus/{cus_id:str}")
+async def get_user_cus(cus_id: str, user_service: UserService = Depends()):
+    return await user_service.find_user_cus(cus_id=cus_id)
 
 @router.get("")
 async def get_all_users(user_service: UserService = Depends()):
