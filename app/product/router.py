@@ -17,7 +17,7 @@ async def get_product(id: int, product_service: ProductService = Depends()):
 async def get_all_products(product_service: ProductService = Depends()):
     return await product_service.find_all_product()
 
-@router.post("new")
+@router.post("/new")
 async def create_product(product: CreateProduct, product_service: ProductService= Depends()):
     try:
         new_product = await product_service.create_product(product)
