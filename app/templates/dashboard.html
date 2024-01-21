@@ -8,107 +8,128 @@
     <!-- Incluye Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Logo and Image -->
-            <a class="navbar-brand" href="#">
-                <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
-                    alt="Imagen de developer hero">
-            </a>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <!-- Logo and Image -->
+        <a class="navbar-brand" href="#">
+            <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
+                alt="Imagen de developer hero">
+        </a>
 
-            <!-- Navigation Links -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <!-- Example of a navigation link -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/recommendation">AskGPT</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/books">Books</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/payments">Payments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout</a>
-                    </li>
-                </ul>
-            </div>
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <!-- Example of a navigation link -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/recommendation">AskGPT</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/books">Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/payments">Payments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
         </div>
-    </nav>
-    <body class="bg-gray-100">
+    </div>
+</nav>
+
+<body class="bg-gray-100">
+    <div class="container mt-3">
+        <div class="bg-white shadow p-3 mb-3 rounded">
+            <h2 class="text-center mb-4">Add a new user</h2>
+            <form id="addUserForm">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="name" placeholder="Nombre del Usuario">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Email">
+                </div>
+           
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-primary" onclick="addUser()">Add User</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Update user form-->
         <div class="container mt-3">
-            <div class="bg-white shadow p-3 mb-3 rounded">
-                <h2 class="text-center mb-4">Agregar nuevo usuario</h2>
-                <form id="addUserForm">
+            <div class="bg-white shadow p-3 rounded">
+                <h2 class="text-center mb-4">Update User</h2>
+                <form id="updateUserForm">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="name" placeholder="Nombre del Usuario">
+                        <!--input cus_id-->
+                        <label for="cusId" class="form-label">Cus</label>
+                        <input type="text" id="cusId" placeholder="Cus">
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="myupdateUser()">Update User</button>
+                    <div class="mb-3">
+                        <label for="updateName" class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" id="updateName" placeholder="Name">
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email">
+                        <label for="updateEmail" class="form-label">Email</label>
+                        <input type="text" name="email" class="form-control" id="updateEmail" placeholder="Email">
                     </div>
-                    <!-- Agregar aquí otros campos necesarios para Stripe -->
+                    <div class="mb-3">
+                        <label for="updatePassword" class="form-label">Password</label>
+                        <input type="text" name="password" class="form-control" id="updatePassword"
+                            placeholder="Password">
+                    </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-primary" onclick="addUser()">Agregar Usuario</button>
                     </div>
+
                 </form>
             </div>
-    
-            <div class="container mt-3">
-                <div class="bg-white shadow p-3 rounded">
-                    <h1 class="text-center mb-4">Registered Customers</h1>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">CUS</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for cus_id, details in users.items() %}
-                            <tr>
-                                <td>{{ cus_id }}</td>
-                                <td>{{ details.name }}</td>
-                                <td>{{ details.email }}</td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteUser('{{ cus_id }}')">Delete</button>
-                                    <button class="btn btn-secondary btn-sm" onclick="updateUser('{{ cus_id }}')">Update</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        </div>
+
+        <div class="container mt-3">
+            <div class="bg-white shadow p-3 rounded">
+                <h1 class="text-center mb-4">Registered Customers</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">CUS</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cus_id, details in users.items() %}
+                        <tr>
+                            <td>{{ cus_id }}</td>
+                            <td>{{ details.name }}</td>
+                            <td>{{ details.email }}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="deleteUser('{{ cus_id }}')">Delete</button>
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-                                
-                               
-        <p>
+    </div>
 
+    <p>
+    </p>
 
-
-
-
-                                        
-
-
-        </p>
-
-
-
-
-        <script>
-            async function deleteUser(cus_id) {
-                try {
-                var response = await fetch(`/api/users/cus/${cus_id}`, {
+    <script>
+        async function deleteUser(cus_id) {
+            try {
+                var response = await fetch(`/api/users/user_id_by_cus/${cus_id}`, {
                     method: 'GET'
                 });
                 if (!response.ok) {
@@ -122,21 +143,67 @@
                 if (!response.ok) {
                     throw new Error('Failed to delete user');
                 }
-                console.log('User deleted successfully'); 
+                console.log('User deleted successfully');
             } catch (error) {
                 console.error('Failed to delete user:', error);
             }
-                
+
+        }
+    </script>
+    <script>
+
+    </script>
+    <script>
+        async function get_users() {
+            var cus_id = document.getElementById('cusId').value;
+            console.log(cus_id);
+            var response = await fetch(`/api/users/user_id_by_cus/${cus_id}`, {
+                method: 'GET'
+            });
+            if (!response.ok) {
+                throw new Error('Not found user');
             }
-    
-            function updateUser(cusId) {
-                // Add JavaScript code to handle user update
-                console.log("Update user with ID:", cusId);
+            const data = await response.json();
+            const user_id = data.user_id;
+            return user_id
+        }
+        async function myupdateUser() {
+            if (document.getElementById('updateName').value == "" || document.getElementById('updateEmail').value == "" || document.getElementById('updatePassword').value == "") {
+                alert("Please fill all the fields");
             }
-        </script>
-    </body>
-    
-    <footer class="footer mt-auto py-3 bg-dark text-white text-center">
-        <h1>Codebook</h1>
-    </footer>
+            const email = document.getElementById('updateEmail').value;
+            const password = document.getElementById('updatePassword').value;
+            const name = document.getElementById('updateName').value;
+                    
+                let uid = await get_users()
+
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Accept", "application/json;");
+
+                var raw = JSON.stringify({
+                    "email": email,
+                    "password": password,
+                    "name":name, 
+                });
+                var requestOptions = {
+                    method: 'PUT',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                fetch(`/api/users/${uid}`, requestOptions)
+                    .then(response => response.text())
+                    .then(result => console.log(result))
+                    .catch(error => console.log('error', error));
+            }
+        
+    </script>
+</body>
+
+<footer class="footer mt-auto py-3 bg-dark text-white text-center">
+    <h1>Codebook</h1>
+</footer>
+
 </html>
