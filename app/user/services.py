@@ -20,6 +20,7 @@ class CreateStripeUser(BaseModel):
 
 class UpdateUser(BaseModel):
     name: str
+    last_name: Optional[str] = None
     email: str
     password: str
 
@@ -34,9 +35,15 @@ class UserService:
         result = await self.repository.user.find_first(where={"email": email})
         return result
     
-    async def find_user_cus(self, cus_id: str):
+    async def find_user_id_by_cus(self, cus_id: str):
         result = await self.repository.stripeuser.find_first(where={"cus_id": cus_id})
         return result.user_id
+    
+    async def find_user_cus_by_id(self, user_id: int):
+        result = await self.repository.stripeuser.find_first(where={"user_id": user_id})
+        result = {"cus_id": result.cus_id}
+        return result
+    
 
     async def find_all_user(self):
         result = await self.repository.user.find_many(
