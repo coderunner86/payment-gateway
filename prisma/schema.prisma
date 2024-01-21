@@ -51,7 +51,7 @@ model Payment {
   id         Int      @id @default(autoincrement())
   amount     Int
   user     User?  @relation(fields: [user_id], references: [id], onDelete: SetNull)
-  product    Product  @relation(fields: [product_id], references: [id])
+  product    Product?  @relation(fields: [product_id], references: [id], onDelete: SetNull)
   accepted   Boolean  @default(false)
   stripe_payment_id String?   @default("pi_default")
   status     String?   @default("rejected")
@@ -60,7 +60,7 @@ model Payment {
   updated_at DateTime @updatedAt
 
   user_id    Int?
-  product_id Int
+  product_id Int?
 
   @@map("payments")
 }
