@@ -60,3 +60,16 @@ class ProductService:
     async def delete_product(self, product_id: int):
         result = await self.repository.product.delete(where={"id": product_id})
         return result
+    
+    def archive_by_prod_id(self, product_id: str):
+        try:
+            # print(product_id)  
+            archived_product = stripe.Product.modify(product_id, active=False)
+            prices = stripe.Price.list(product=product_id)
+            # print(prices)
+            for price in prices.auto_paging_iter():
+                stripe.Price.modify(price.id, active=False)
+            print(archived_product)
+            return archived_product
+        except stripe.error.StripeError as ex:
+            return {"error on the service": str(ex)}
