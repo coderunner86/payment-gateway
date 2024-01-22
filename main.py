@@ -23,6 +23,8 @@ from app.stripe_integration.stripe_users import get_customers_info
 from app.stripe_integration.stripe_products import get_payment_links
 from app.stripe_integration.stripe_payments import get_payment_info
 
+from app.product.services import ProductService as product_service
+
 from app.register.router import register
 
 env_path = os.path.join(".", ".env")
@@ -77,6 +79,18 @@ async def customers_dashboard(request: Request):
         "dashboard.html", context={"request": request, "users": users}
     )
 
+@app.get("/manage", response_class=HTMLResponse)
+def book_space(request: Request):
+    token = request.cookies.get("token")
+    session_id = request.cookies.get("session_id")
+    if not token or not session_id:
+        return RedirectResponse(url="/login", status_code=303)
+    products = product_service.get_stripe_product()
+    combined_products = []
+    for id, name, description, images in zip(products['ids'], products['names'], products['descriptions'], products['images']):
+        combined_products.append({"id": id, "name": name, "description": description, "image": images[0] if images else None})
+
+    return templates.TemplateResponse("book-manager.html", context={"request": request, "products": combined_products})
 
 @app.get("/recommendation", response_class=HTMLResponse)
 async def payment_links(request: Request):
@@ -96,7 +110,7 @@ async def payment_links(request: Request):
     )
 
 
-@app.get("/books", response_class=HTMLResponse)
+@app.get("/buy", response_class=HTMLResponse)
 async def payment_links(request: Request):
     token = request.cookies.get("token")
     session_id = request.cookies.get("session_id")
