@@ -8,7 +8,7 @@ async function askGPT(question) {
                 'Content-Type': 'application/json'
                 // ,'session_id': session_id
             },
-            body: JSON.stringify({ question: question, userId:15})
+            body: JSON.stringify({ question: question})
         });
 
         if (!response.ok) {
