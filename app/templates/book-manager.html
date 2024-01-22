@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Manager</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <!-- Logo and Image -->
+            <a class="navbar-brand" href="#">
+                <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
+                    alt="Imagen de developer hero">
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <!-- Example of a navigation link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recommendation">AskGPT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/buy">Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/manage">Manage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/payments">Payments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        <!-- Lista de productos -->
+        <div class="bg-white shadow p-3 mb-3 rounded">
+            <h1 class="text-center mb-4">Books</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Imagen</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in products %}
+                    <tr>
+                        <td>{{ [i][0].id }}</td>
+                        <td>{{ [i][0].name }}</td>
+                        <td>{{ [i][0].description }}</td>
+                        <td>
+                            {% if [i][0].image %}
+                            <img src="{{[i][0].image }}" alt="{{ [i][0].name }}" style="width:100px;">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                onclick="archiveProduct('{{[i][0].id }}')">Archive</button>
+                            <button class="btn btn-primary btn-sm"
+                                onclick="unarchiveProduct('{{[i][0].id }}')">Unarchive</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Aquí tus scripts de JavaScript para manejar las acciones de los botones -->
+    <script>
+        async function archiveProduct(product_id) {
+            var result = await fetch(`/api/products/product/archive/${product_id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+        }
+
+        async function unarchiveProduct(product_id) {
+            var result = await fetch(`/api/products/product/unarchive/${product_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+        }
+    </script>
+
+    <footer class="footer mt-auto py-3 bg-dark text-white text-center">
+        <h1>Codebook</h1>
+    </footer>
+</body>
+
+</html>

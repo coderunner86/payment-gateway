@@ -28,7 +28,10 @@
                     <a class="nav-link" href="/recommendation">AskGPT</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/books">Books</a>
+                    <a class="nav-link" href="/buy">Buy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/manage">Manage</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/payments">Payments</a>
@@ -166,7 +169,7 @@
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Accept", "application/json;");
-            var raw = JSON.stringify({"id": id, "name": name, "email": email, "password": password });
+            var raw = JSON.stringify({ "id": id, "name": name, "email": email, "password": password });
             var requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
