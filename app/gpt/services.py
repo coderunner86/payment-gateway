@@ -10,7 +10,8 @@ load_dotenv()
 
 class UserQuestion(BaseModel):
     question: str
-
+    gptResponse: Optional[str] = None
+    
 API_KEY = os.getenv("API_KEY")
 
 class GptService:
@@ -41,20 +42,12 @@ class GptService:
     async def create_question(self, request: Request, userquestion: UserQuestion):
         try:
             session_id = request.cookies.get("session_id")
-            print("session_id", session_id)
             user_id = get_user_id_from_session(session_id)
             data = userquestion.dict()
-            data["question"] = userquestion.question
-            data["user_id"] = user_id
+            
             # gpt_response = self.ask_gpt(self, userquestion.question)
-            gpt_response = "Grandioso"
-            data["gptResponse"] = gpt_response
-            data = {"question": userquestion.question,"gptResponse": gpt_response, "user_id": user_id}
-            print(userquestion)
-            print(type(userquestion.dict()))
-            print("data", data)
-            print(type(data))          
-            result = await self.repository.userquestion.create(data=userquestion.dict()) #.gpt.create(data=data)
+                      
+            result = await self.repository.userquestion.create(data=data) #.gpt.create(data=data)
             print("result", result)
             return result
         except Exception as e:
