@@ -63,13 +63,33 @@ class ProductService:
     
     def archive_by_prod_id(self, product_id: str):
         try:
-            # print(product_id)  
             archived_product = stripe.Product.modify(product_id, active=False)
             prices = stripe.Price.list(product=product_id)
-            # print(prices)
             for price in prices.auto_paging_iter():
                 stripe.Price.modify(price.id, active=False)
-            print(archived_product)
+            # print(archived_product)
             return archived_product
         except stripe.error.StripeError as ex:
             return {"error on the service": str(ex)}
+        
+    def unarchive_by_prod_id(self, product_id: str):
+        try:
+            unarchived_product = stripe.Product.modify(product_id, active=True)
+            # print(unarchived_product)
+            return unarchived_product
+        except stripe.error.StripeError as ex:
+            return {"error on the service": str(ex)}
+        
+    def get_stripe_product():
+        try:
+            products = stripe.Product.list(active=True)
+            ids = [product.id for product in products]
+            names = [product.name for product in products]
+            descriptions = [product.description for product in products]
+            images = [product.images for product in products]
+
+            product_dict = {"ids": ids, "names": names, "descriptions": descriptions, "images": images}
+             
+            return product_dict
+        except stripe.error.StripeError as ex:
+            return {"error on the get_stripe_product service": str(ex)}
