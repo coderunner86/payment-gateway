@@ -27,7 +27,7 @@ async def create_product(product: CreateProduct, product_service: ProductService
         raise HTTPException(status_code=500, detail=f"Fuck! Internal Server Error: {str(ex)}")
     
 
-@router.put("/{id}")
+@router.put("/update/{id}")
 async def update_product(id: int, product: UpdateProduct, product_service:ProductService = Depends()):
     return await product_service.update_product(product_id=id, product=product)
 
@@ -41,5 +41,13 @@ def archive_product_by_prod_id(product_id: str, product_service: ProductService 
     try:
         archived_product = product_service.archive_by_prod_id(product_id=product_id)
         return {"message": "Product archived on stripe", "product": archived_product}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error muy puto: {str(e)}")
+
+@router.put("/product/unarchive/{product_id}")
+def unarchive_product_by_prod_id(product_id: str, product_service: ProductService = Depends()):
+    try:
+        unarchived_product = product_service.unarchive_by_prod_id(product_id=product_id)
+        return {"message": "Product unarchived on stripe", "product": unarchived_product}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error muy puto: {str(e)}")
