@@ -1,6 +1,7 @@
 
-from fastapi import APIRouter, HTTPException
-from app.gpt.services import GptService
+from fastapi import APIRouter, HTTPException, Request
+from app.gpt.services import GptService, UserQuestion
+from app.helpers.session import get_user_id_from_session
 import os
 from dotenv import load_dotenv
 
@@ -12,10 +13,11 @@ gpt_service = GptService(API_KEY)
 router = APIRouter( prefix="/gpt", tags=["gpt"])
 
 @router.post("/ask-gpt")
-def ask_gpt(question: str):
+async def ask_gpt_endpoint(request: Request, user_question: UserQuestion):
     try:
-        response = gpt_service.ask_gpt(question)
-        return response
+        result = await gpt_service.create_question(request, user_question)
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 

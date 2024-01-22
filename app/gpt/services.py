@@ -1,9 +1,16 @@
 import requests
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
+from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
-
+from app.helpers.session import get_user_id_from_session
 load_dotenv() 
+
+class UserQuestion(BaseModel):
+    question: str
+    gptResponse: str
+    userId: int    
+
 
 API_KEY = os.getenv("API_KEY")
 class GptService:
@@ -29,4 +36,18 @@ class GptService:
         except requests.RequestException as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    
+    async def create_question(self, request: Request,user_question: UserQuestion):
+        try:
+            session_id = request.cookies.get("session_id")
+            print("session_id", session_id)
+            user_id = get_user_id_from_session(session_id)
+            print("user_id", user_id)
+            gpt_response = self.ask_gpt(user_question.question)
+            print("gpt_response", gpt_response)
+            data = {"question": user_question.question, "gpt_response": user_question.gptResponse, "user_id": user_id}
+            print("data", data)
+            result = await self.repository.user_question.create(data=data)
+            print("result", result)
+            return result
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
