@@ -12,6 +12,7 @@ class CreateUser(BaseModel):
     last_name: Optional[str] = None
     email: str
     password: str
+    gptResponse: Optional[str] = None
 
 class CreateStripeUser(BaseModel):
     id: int
@@ -23,7 +24,7 @@ class UpdateUser(BaseModel):
     last_name: Optional[str] = None
     email: str
     password: str
-
+    gptResponse: Optional[str] = None
 class UserService:
     def __init__(self):
         self.repository = database
@@ -73,6 +74,7 @@ class UserService:
         try:
             encripted_password = Hasher.get_password_hash(user.password)
             user_data = user.dict()
+         
             user_data['password'] = encripted_password
 
             result = await self.repository.user.update(
