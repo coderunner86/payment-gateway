@@ -70,7 +70,7 @@ model Payment {
 model UserQuestion {
   id           Int      @id @default(autoincrement())
   question     String
-  gptResponse  String
+  gptResponse  String?
   user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId       Int?
   payments     Payment[] 
