@@ -12,55 +12,70 @@ generator client {
 
 // data models
 model User {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique
-  password   String
-  name       String
-  last_name  String?
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  Payment    Payment[]   
-  StripeUser StripeUser?
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  password     String
+  name         String
+  last_name    String?
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  Payment      Payment[]
+  StripeUser   StripeUser?
+  UserQuestion UserQuestion[]
 
   @@map("users")
 }
 
 model StripeUser {
-  id       Int    @id @default(autoincrement())
-  cus_id   String @unique
-  user     User?  @relation(fields: [user_id], references: [id], onDelete: SetNull)
-  user_id  Int?    @unique
+  id      Int    @id @default(autoincrement())
+  cus_id  String @unique
+  user    User?  @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  user_id Int?   @unique
 
   @@map("stripe_users")
 }
 
 model Product {
-  id          Int        @id @default(autoincrement())
-  stripeProductId String? @unique
-  name        String
-  description String?
-  price       Int
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-  Payment     Payment[]
+  id              Int       @id @default(autoincrement())
+  stripeProductId String?   @unique
+  name            String
+  description     String?
+  price           Int
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  Payment         Payment[]
 
   @@map("products")
 }
 
 model Payment {
-  id         Int      @id @default(autoincrement())
-  amount     Int
-  user     User?  @relation(fields: [user_id], references: [id], onDelete: SetNull)
-  product    Product?  @relation(fields: [product_id], references: [id], onDelete: SetNull)
-  accepted   Boolean  @default(false)
-  stripe_payment_id String?   @default("pi_default")
-  status     String?   @default("rejected")
-  payment_method_types String? @default("card")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
+  id                   Int      @id @default(autoincrement())
+  amount               Int
+  user                 User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  product              Product? @relation(fields: [product_id], references: [id], onDelete: SetNull)
+  accepted             Boolean  @default(false)
+  stripe_payment_id    String?  @default("pi_default")
+  status               String?  @default("rejected")
+  payment_method_types String?  @default("card")
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+  userQuestionId Int? 
+  UserQuestion   UserQuestion? @relation(fields: [userQuestionId], references: [id], onDelete: SetNull)
   user_id    Int?
   product_id Int?
 
   @@map("payments")
+}
+
+model UserQuestion {
+  id           Int      @id @default(autoincrement())
+  question     String
+  gptResponse  String
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId       Int?
+  payments     Payment[] 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("user_questions")
 }
