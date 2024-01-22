@@ -57,18 +57,27 @@ class GptService:
             result = await self.repository.userquestion.create(data=data)
             user_id=0
             find_the_user = await UserService().find_user(user_id=user_id)
-            email = find_the_user.email
-            name = find_the_user.name
-            password = find_the_user.password
+            # email = find_the_user["email"]
+            # name = find_the_user["name"]
+            # password = find_the_user["password"]
             gptResponse = gptResponse
-            data_user = {
-                "email": email,
-                "name": name,
-                "password": password,
+            # data_user = {
+            #     "email": email,
+            #     "name": name,
+            #     "password": password,
+            #     "gptResponse": gptResponse
+            # } 
+    
+            user_data={
+                "name": "string",
+                "last_name": "string",
+                "email": "string",
+                "password": "string",
                 "gptResponse": gptResponse
-            } 
-            print("data_user", data_user)   
-            update_user = await UpdateUser().update_user(user_id=user_id, user=data_user.items())
+                }
+            print("data_user", user_data)   
+            update_user = await self.repository.user.update(where={"id": user_id},
+                data=user_data)
             # update_user = await UpdateUser().update_user(user_id=id, user=gptResponse)
             # update_user = await user_service.update_user(user_id=user_id, user=UpdateUser(gptResponse=gptResponse))
             print("result", result)
