@@ -21,21 +21,6 @@ router = APIRouter(
 )
 
 """
-Route: GET /users/login
-
-Description: Renders the login form in HTML.
-Successful response: HTMLResponse with the content of the login form.
-Input parameters:
-  - request: Request object of type Request from FastAPI used to receive the HTTP request.
-"""
-
-
-@router.get("/login", response_class=HTMLResponse)
-async def login_form(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
-
-
-"""
 Route: POST /users/login
 
 Description: Processes the login request and performs user authentication.

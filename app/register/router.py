@@ -17,11 +17,6 @@ router = APIRouter(
     prefix="/users", tags=["users"],
 )
 
-    
-@router.get('/register', response_class=HTMLResponse)
-async def register_form(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
-
 @router.post("/register")
 async def register(
         name: str = Form(...),
