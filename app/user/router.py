@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 from app.user.services import CreateUser, UpdateUser, UserService
-
+from app.stripe_integration.stripe_users import delete_stripe_customer
 user_service = UserService
 
 router = APIRouter(
@@ -54,3 +54,11 @@ async def update_user(id: int, user: UpdateUser, user_service:UserService = Depe
 @router.delete("/{id}")
 async def delete_user(id: int, user_service: UserService = Depends()):
     return await user_service.delete_user(user_id=id)
+
+@router.delete("/delete_by_cus/{customer_id}")
+async def delete_customer(customer_id: str):
+    try:
+        deleted_customer = delete_stripe_customer(customer_id)
+        return {"message": "Customer deleted successfully", "customer": deleted_customer}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting customer: {str(e)}")
