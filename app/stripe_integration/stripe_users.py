@@ -21,4 +21,9 @@ async def get_customers_info():
             
             except Exception as e:
                 return {"error": str(e)}
-        
+def delete_stripe_customer(customer_id):
+    try:
+        deleted_customer = stripe.Customer.delete(customer_id)
+        return deleted_customer
+    except stripe.error.StripeError as e:
+        raise e
