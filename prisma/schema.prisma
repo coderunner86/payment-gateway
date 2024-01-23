@@ -1,7 +1,7 @@
 // database
 datasource db {
   provider = "sqlite"
-  url      = "file:db.sqlite3"
+  url      = env("SQLITE_URL")
 }
 
 // generator
