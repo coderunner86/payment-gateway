@@ -117,12 +117,12 @@
                     <tbody>
                         {% for cus_id, details in users.items() %}
                         <tr>
-                            <td>{{ cus_id }}</td>
+                            <td id="cus_id">{{ cus_id }}</td>
                             <td>{{ details.name }}</td>
                             <td>{{ details.email }}</td>
                             <td>
                                 <button class="btn btn-danger btn-sm"
-                                    onclick="deleteUser('{{ cus_id }}')">Delete</button>
+                                    onclick="deleteUser(document.getElementById('cus_id').innerHTML)">Delete</button>
 
                             </td>
                         </tr>
