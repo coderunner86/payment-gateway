@@ -146,14 +146,21 @@
                     throw new Error('Not found user');
                 }
                 const user = await response.json();
+                user_id = user.user_id 
                 console.log(user);
-                response = await fetch(`/api/users/${user}`, {
+                response = await fetch(`/api/users/${user_id}`, {
                     method: 'DELETE'
                 })
                 if (!response.ok) {
-                    throw new Error('Failed to delete user');
+                    throw new Error('Failed to delete user on database');
                 }
-                console.log('User deleted successfully');
+                response = await fetch(`/api/users/delete_by_cus/${cus_id}`, {
+                    method: 'DELETE'
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to delete user on Stripe');
+                }
+                console.log('User deleted successfully on database and stripe');
             } catch (error) {
                 console.error('Failed to delete user:', error);
             }
