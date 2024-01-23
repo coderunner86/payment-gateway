@@ -25,11 +25,17 @@
   </a>
 </p>
 
-# API PAYMENT
+# API PAYMENT WITH STRIPE AND CHATGPT INTEGRATION
 
 ## Description
+This project presents a comprehensive solution, combining the robustness of Stripe's payment platform with the advanced AI capabilities of ChatGPT. Designed to streamline CRUD operations, it also facilitates the creation and management of Stripe users (customers), products, and payment confirmations directly from the application interface.
 
-API Payment
+Key Features:
+Stripe Integration: Simplifies the handling of financial transactions. Users can effortlessly create Stripe customers, add and manage products, and handle payments, all within a unified system.
+CRUD Functionalities: Offers full Create, Read, Update, Delete (CRUD) capabilities, ensuring a flexible and efficient management of database records.
+AI-Enhanced Product Information Retrieval: With the power of ChatGPT, our API can intelligently retrieve detailed information about products stored in the database. This feature is especially useful for providing customers with in-depth product insights.
+AI-Driven Product Recommendations: ChatGPT's integration goes a step further by offering personalized product recommendations. Depending on user inquiries, it can suggest suitable products, enhancing the customer experience.
+
 
 ## Development
 
@@ -59,3 +65,22 @@ $ prisma db push
 # 6. Execute app
 $ uvicorn main:app --reload
 ```
+## Testing and Documentation
+The API can be easily tested and explored using FastAPI's interactive documentation at `localhost:8000/docs`. This feature allows for a hands-on experience with the API's endpoints, providing real-time testing and a clear understanding of its capabilities.
+
+## Ideal Use Cases
+- **E-commerce platforms** seeking a comprehensive payment system with AI-enhanced customer interaction.
+- **Businesses** looking to provide detailed product information and tailored recommendations.
+- **Developers** in need of an integrated solution for managing products, transactions, and user interactions.
+
+## Technology Stack
+- **FastAPI**: For building a high-performance, easy-to-use backend with asynchronous features.
+- **Prisma**: As the ORM for efficient database operations.
+- **Stripe**: For secure and versatile payment processing.
+- **ChatGPT**: For advanced natural language processing in information retrieval and recommendations.
+
+
+## Acknowledgements
+
+Special thanks to [PEAKU](https://peaku.co/es/bootcamp-fullstack) for their invaluable support and contributions to this project. 
+
