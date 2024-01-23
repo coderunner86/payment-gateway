@@ -1,16 +1,16 @@
 import httpx
-from fastapi import HTTPException, Request, Depends
+from fastapi import HTTPException, Request
 from app.settings.database import database
 from pydantic import BaseModel
 from typing import Optional
 import os
 from dotenv import load_dotenv
-from app.helpers.session import get_user_id_from_session
-from app.user.services import UserService, UpdateUser
+from app.user.services import UserService
 load_dotenv()
 
 class UserQuestion(BaseModel):
     question: str
+    userId: Optional[int] = None
     
 API_KEY = os.getenv("API_KEY")
 
@@ -42,63 +42,42 @@ class GptService:
     async def create_question(self, request: Request, userquestion: UserQuestion):
         try:
             # Obtener el user_id de la sesión
-            session_id = request.cookies.get("session_id")
-            user_id = get_user_id_from_session(session_id)
+            values = request.cookies.get("session_id")
+            values = values.strip("() ")
+            values = (values).split(",").pop(1)
+            
+            user_id = int(values)
 
+            print("user_id", user_id)
+           
             # Obtener la respuesta de GPT-3
             gptResponse = await self.ask_gpt(userquestion.question)
-            # gpt_response = "hola"
-            # Construir el diccionario de datos, incluyendo la respuesta de GPT-3
             data = userquestion.dict()
             
-            # data['user_id'] = user_id  # Asegúrate de que tu modelo UserQuestion tenga este campo
+            data['userId'] = user_id  
 
-            # Almacenar la pregunta y la respuesta en el repositorio
+            # Almacenar la pregunta 
             result = await self.repository.userquestion.create(data=data)
-            user_id=0
+        
             find_the_user = await UserService().find_user(user_id=user_id)
-            # email = find_the_user["email"]
-            # name = find_the_user["name"]
-            # password = find_the_user["password"]
+            
+            email = find_the_user.email
+            name = find_the_user.name
+            password = find_the_user.password
             gptResponse = gptResponse
-            # data_user = {
-            #     "email": email,
-            #     "name": name,
-            #     "password": password,
-            #     "gptResponse": gptResponse
-            # } 
     
             user_data={
-                "name": "string",
-                "last_name": "string",
-                "email": "string",
-                "password": "string",
+                "name": name,
+                "email": email,
+                "password": password,
                 "gptResponse": gptResponse
                 }
-            print("data_user", user_data)   
+            print("data_user", user_data)
+            # Almacenar la respuesta 
             update_user = await self.repository.user.update(where={"id": user_id},
                 data=user_data)
-            # update_user = await UpdateUser().update_user(user_id=id, user=gptResponse)
-            # update_user = await user_service.update_user(user_id=user_id, user=UpdateUser(gptResponse=gptResponse))
-            print("result", result)
-            print(data)
-            return data
+          
+            return gptResponse
         except Exception as e:
             print(f"Error: {e}")
             raise HTTPException(status_code=500, detail=f"Error creating question: {e}")
-
-
-
-    # async def create_question(self, request: Request, userquestion: UserQuestion):
-    #     try:
-    #         session_id = request.cookies.get("session_id")
-    #         user_id = get_user_id_from_session(session_id)
-    #         data = userquestion.dict()
-            
-    #         # gpt_response = self.ask_gpt(self, userquestion.question)
-                      
-    #         result = await self.repository.userquestion.create(data=data) #.gpt.create(data=data)
-    #         print("result", result)
-    #         return result
-    #     except Exception as e:
-    #         raise HTTPException(status_code=500, detail=f"Error creating question: {e}")
