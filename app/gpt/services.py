@@ -28,14 +28,18 @@ class GptService:
                         'Application': 'application/json'
                     }) 
                     products.raise_for_status()
+                    if products.status_code != 200:
+                        raise HTTPException(status_code=products.status_code, detail=products.text)
                     products_json = products.json()
+                    print("products_json", products_json)
                     product_descriptions = ", ".join([f"{product['name']}: {product['description']}" for product in products_json])
                     delimiter = "####"
                     payment_links = await get_payment_links()
+                    print("payment_links", payment_links)
                     buy_links = ""
                     for link, titulo, recursos, descripcion in payment_links:
                         buy_links += f"Título: {titulo}\nDescripción: {descripcion}\nEnlace de Pago: {link}\nRecursos Adicionales: {', '.join(recursos)}\n\n"
-                    
+                    print("buy_links", buy_links)
 
                     system_messages = f"""
                     Sigue estos pasos para responder a las consultas de los clientes.
@@ -105,7 +109,10 @@ class GptService:
                         }
                     )
                     response.raise_for_status()
+                    print(response.json())
                     return response.json()['choices'][0]['text']
+                    if response.status_code != 200:
+                        return "La respuesta de GPT-3 no se encuentra disponible"                                         
             except httpx.RequestError as e:
                     raise HTTPException(status_code=400, detail=f"HTTP request failed: {e}")
 
@@ -125,7 +132,7 @@ class GptService:
             data = userquestion.dict()
             
             data['userId'] = user_id  
-
+            print("data", data)
             # Almacenar la pregunta 
             result = await self.repository.userquestion.create(data=data)
         
