@@ -55,7 +55,11 @@ async def update_user(id: int, user: UpdateUser, user_service:UserService = Depe
 async def delete_user(id: int, user_service: UserService = Depends()):
     return await user_service.delete_user(user_id=id)
 
-@router.delete("/delete_by_cus/{customer_id}")
+@router.delete("/delete_by_cus_on_table/{cus_id}")
+async def delete_stripe_user_on_table(cus_id: str, user_service: UserService = Depends()):
+    return await user_service.delete_stripe_user_on_table(cus_id=cus_id)
+
+@router.delete("/delete_by_cus_on_stripe/{customer_id}")
 async def delete_customer(customer_id: str):
     try:
         deleted_customer = delete_stripe_customer(customer_id)

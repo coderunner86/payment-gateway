@@ -88,8 +88,11 @@ class UserService:
         
     async def delete_user(self, user_id: int):
         result = await self.repository.user.delete(where={"id": user_id})
-        return result
+        return {"message": "User deleted successfully"}
     
+    async def delete_stripe_user_on_table(self, cus_id: str):
+        result = await self.repository.stripeuser.delete(where={"cus_id": cus_id})
+        return {"message": "Stripe user deleted successfully on table"}
 
 # StripeUser Handler service
 # TODO: 
