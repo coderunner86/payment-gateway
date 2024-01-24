@@ -8,41 +8,43 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body class="bg-gray-100">
-        <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <!-- Logo and Image -->
-                <a class="navbar-brand" href="#">
-                    <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
-                        alt="Imagen de developer hero">
-                </a>
+        <header><!-- Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark container-fluid" style="position: fixed; width: 100%;top: 0%;">
+                <div class="container">
+                    <!-- Logo and Image -->
+                    <a class="navbar-brand" href="#">
+                        <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
+                            alt="Imagen de developer hero">
+                    </a>
     
-                <!-- Navigation Links -->
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                    <!-- Example of a navigation link -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/recommendation">AskGPT</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/buy">Buy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/manage">Manage</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/payments">Payments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout</a>
-                    </li>
-                    </ul>
+                    <!-- Navigation Links -->
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                            <!-- Example of a navigation link -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="/dashboard">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/recommendation">AskGPT</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/buy">Buy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/manage">Manage</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/payments">Payments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+            <div id="catalog">
+        </header>
     <div id="catalog">
 
 <!-- Main Content -->
@@ -84,24 +86,6 @@
 </table>
 
 </div>
-                            
-                               
-<p>
-
-
-
-
-
-                                        
-
-
-</p>
-
-
-
-
-
-      
     </div>
 </div>
 
@@ -109,7 +93,11 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
-<footer class="footer mt-auto py-3 bg-dark text-white text-center">
-    <h1>Codebook</h1>
+<footer class="mt-auto py-3 bg-dark text-white" style="position: fixed; bottom: 0; width: 100%;">
+    <h1 class="text-center">Codebook</h1>
+    <div class="container">
+        <p class="text-center">Copyright © 2024</p>
+    </div>
+
 </footer>
 </html>

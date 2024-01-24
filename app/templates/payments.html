@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Payments</title>
-        <!-- Incluye Bootstrap CSS -->
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-        <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments</title>
+    <!-- Incluye Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+
+<body class="bg-gray-100">
+    <header><!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark container-fluid" style="position: fixed; width: 100%;top: 0%;">
             <div class="container">
                 <!-- Logo and Image -->
                 <a class="navbar-brand" href="#">
                     <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
                         alt="Imagen de developer hero">
                 </a>
-    
+
                 <!-- Navigation Links -->
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
@@ -42,68 +46,57 @@
                 </div>
             </div>
         </nav>
-    <div id="catalog">
-        <body class="bg-gray-100">
-<!-- Main Content -->
-<div class="container mx-auto mt-8">
-    <div class="bg-white shadow-lg rounded-lg p-6">
-        <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Payment information</h2>
-      
-           <!-- Bootstrap Table -->
-<div class="container mt-4">
-    <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>ID del Pago</th>
-               
-                <th>Monto</th>
-                <th>Estado</th>
-                <th>Moneda</th>
-                <th>Method</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-                <tr>
-                    <td>{{ product.id }}</td>
-                  
-                    <td>${{ product.amount }}</td>
-                    <td>{{ product.status }}</td>
-                    <td>{{ product.currency }}</td>
-                    <td>{{ product.payment_method_types }}</td>
-                    <td>{{ product.description }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-                            
-                               
-<p>
+        <div id="catalog">
+    </header>
+    <!-- Main Content -->
+    <div class="container mx-auto mt-8">
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Payment information</h2>
+
+            <!-- Bootstrap Table -->
+            <div class="container mt-4">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID del Pago</th>
+
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Moneda</th>
+                            <th>Method</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+
+                            <td>${{ product.amount }}</td>
+                            <td>{{ product.status }}</td>
+                            <td>{{ product.currency }}</td>
+                            <td>{{ product.payment_method_types }}</td>
+                            <td>{{ product.description }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
 
-
-
-
-                                        
-
-
-</p>
-
-
-
-
-
-      
+            </div>
+        </div>
     </div>
-</div>
-
-
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
 </body>
-<footer class="footer mt-auto py-3 bg-dark text-white text-center">
-    <h1>Codebook</h1>
+<footer class="mt-auto py-3 bg-dark text-white" style="position: fixed; bottom: 0; width: 100%;">
+    <h1 class="text-center">Codebook</h1>
+    <div class="container">
+        <p class="text-center">Copyright © 2024</p>
+    </div>
+
 </footer>
+
 </html>

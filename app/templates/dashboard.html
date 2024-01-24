@@ -8,43 +8,76 @@
     <!-- Incluye Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <!-- Logo and Image -->
-        <a class="navbar-brand" href="#">
-            <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
-                alt="Imagen de developer hero">
-        </a>
-
-        <!-- Navigation Links -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <!-- Example of a navigation link -->
-                <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/recommendation">AskGPT</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/buy">Buy</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/manage">Manage</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/payments">Payments</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
 <body class="bg-gray-100">
+    <header><!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark container-fluid"
+            style="position: fixed; width: 100%;top: 0%;">
+            <div class="container">
+                <!-- Logo and Image -->
+                <a class="navbar-brand" href="#">
+                    <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
+                        alt="Imagen de developer hero">
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Example of a navigation link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/recommendation">AskGPT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/buy">Buy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manage">Manage</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/payments">Payments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="catalog">
+    </header>
+    <!-- Lista de usuarios registrados -->
+    <div class="container mt-3">
+        <div class="bg-white shadow p-3 rounded">
+            <h1 class="text-center mb-4"></h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">CUS</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cus_id, details in users.items() %}
+                    <tr>
+                        <td id="cus_id">{{ cus_id }}</td>
+                        <td>{{ details.name }}</td>
+                        <td>{{ details.email }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                onclick="deleteUser(document.getElementById('cus_id').innerHTML)">Delete</button>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="container mt-3">
         <div class="bg-white shadow p-3 mb-3 rounded">
             <h2 class="text-center mb-4">Add a new user</h2>
@@ -102,63 +135,37 @@
             </div>
         </div>
 
-        <div class="container mt-3">
-            <div class="bg-white shadow p-3 rounded">
-                <h1 class="text-center mb-4">Registered Customers</h1>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">CUS</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cus_id, details in users.items() %}
-                        <tr>
-                            <td id="cus_id">{{ cus_id }}</td>
-                            <td>{{ details.name }}</td>
-                            <td>{{ details.email }}</td>
-                            <td>
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="deleteUser(document.getElementById('cus_id').innerHTML)">Delete</button>
-
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
-
-    <p>
-    </p>
-
     <script>
         async function deleteUser(cus_id) {
             try {
-                var response = await fetch(`/api/users/user_id_by_cus/${cus_id}`, {
+                const response1 = await fetch(`/api/users/user_id_by_cus/${cus_id}`, {
                     method: 'GET'
                 });
-                if (!response.ok) {
+                if (!response1.ok) {
                     throw new Error('Not found user');
                 }
-                const user = await response.json();
-                user_id = user.user_id 
+                const user = await response1.json();
+                user_id = user.user_id
                 console.log(user);
-                response = await fetch(`/api/users/${user_id}`, {
+                const response3 = await fetch(`/api/users/${user_id}`, {
                     method: 'DELETE'
                 })
-                if (!response.ok) {
+                if (!response3.ok) {
                     throw new Error('Failed to delete user on database');
                 }
-                response = await fetch(`/api/users/delete_by_cus/${cus_id}`, {
+                const response2 = await fetch(`/api/users/delete_by_cus_on_stripe/${cus_id}`, {
                     method: 'DELETE'
                 })
-                if (!response.ok) {
+                if (!response2.ok) {
                     throw new Error('Failed to delete user on Stripe');
+                }
+                console.log('User deleted successfully on database and stripe');
+                const response4 = await fetch(`/api/users/delete_by_cus_on_table/${cus_id}`, {
+                    method: 'DELETE'
+                })
+                if (!response4.ok) {
+                    throw new Error('Failed to delete stripeuser on table stripeusers');
                 }
                 console.log('User deleted successfully on database and stripe');
             } catch (error) {
@@ -237,9 +244,12 @@
 
     </script>
 </body>
+<footer class="mt-auto py-3 bg-dark text-white" style="position: fixed; bottom: 0; width: 100%;">
+    <h1 class="text-center">Codebook</h1>
+    <div class="container">
+        <p class="text-center">Copyright © 2024</p>
+    </div>
 
-<footer class="footer mt-auto py-3 bg-dark text-white text-center">
-    <h1>Codebook</h1>
 </footer>
 
 </html>

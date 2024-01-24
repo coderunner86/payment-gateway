@@ -10,41 +10,43 @@
 </head>
 
 <body class="bg-gray-100">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Logo and Image -->
-            <a class="navbar-brand" href="#">
-                <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
-                    alt="Imagen de developer hero">
-            </a>
+    <header><!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark container-fluid" style="position: fixed; width: 100%;top: 0%;">
+            <div class="container">
+                <!-- Logo and Image -->
+                <a class="navbar-brand" href="#">
+                    <img src="/static/images/devhero.png" width="50" height="50" class="d-inline-block align-top"
+                        alt="Imagen de developer hero">
+                </a>
 
-            <!-- Navigation Links -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <!-- Example of a navigation link -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/recommendation">AskGPT</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/buy">Buy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/manage">Manage</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/payments">Payments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout</a>
-                    </li>
-                </ul>
+                <!-- Navigation Links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Example of a navigation link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/recommendation">AskGPT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/buy">Buy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manage">Manage</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/payments">Payments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+        <div id="catalog">
+    </header>
     <div class="container mt-5">
         <label for="question">Ask about some book you want to buy:</label>
         <input type="text" id="question" class="form-control mb-2" placeholder="Type your question...">
@@ -134,9 +136,11 @@
     <script src="/static/js/script.js">
     </script>
 </body>
+<footer class="mt-auto py-3 bg-dark text-white" style="position: fixed; bottom: 0; width: 100%;">
+    <h1 class="text-center">Codebook</h1>
+    <div class="container">
+        <p class="text-center">Copyright © 2024</p>
+    </div>
 
-<footer class="footer mt-auto py-3 bg-dark text-white text-center">
-    <h1>Codebook</h1>
 </footer>
-
 </html>
