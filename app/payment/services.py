@@ -54,6 +54,15 @@ class PaymentService:
         self.repository = database
 
     async def find_payment(self, payment_id: int):
+        """
+        Asynchronously finds the payment information by the given payment ID.
+
+        :param payment_id: The ID of the payment to find.
+        :type payment_id: int
+
+        :return: A dictionary containing payment information identified by the payment ID.
+        :rtype: dict
+        """
         payment = await self.repository.payment.find_first(where={"id": payment_id})
         if not payment:
             raise HTTPException(status_code=404, detail="Payment ID not found")
@@ -105,6 +114,11 @@ class PaymentService:
 
     # This method will create a payment intent
     async def create_payment(self, payment: CreatePayment):
+        """
+        Asynchronously creates a payment. Checks if the user and product exist, then creates the payment. 
+        Returns the payment info and other details if the payment is successful. 
+        Otherwise, returns an error message with details. 
+        """
         user_exists = await self.repository.user.find_first(
             where={"id": payment.user_id}
         )
@@ -235,6 +249,17 @@ class PaymentService:
     # This method will process the payment intent by charge
     #  the debit or credit card of the user
     async def stripe_payment_intent(self, payment_id: int):
+        """
+        Asynchronously creates a payment intent in the Stripe API using the provided payment_id.
+
+        Args:
+            payment_id (int): The identifier of the payment.
+
+        Returns:
+            dict: A dictionary containing the result of the payment intent creation, including
+            the success status, charge, payment intent id, payment method, and status. In case
+            of an error, it returns a dictionary with the error message.
+        """
         payment = await self.find_payment(payment_id)
         amount = payment["amount"]
         if not payment:
@@ -269,6 +294,16 @@ class PaymentService:
         return strpe_payment_info_by_id
 
     async def stripe_payment_confirm(self, payment_intent_id: str, payment_method: str):
+        """
+        Asynchronously confirms a Stripe payment.
+
+        Args:
+            payment_intent_id (str): The ID of the payment intent.
+            payment_method (str): The payment method.
+
+        Returns:
+            dict: The result of the payment confirmation, including payment method types and status. If an error occurs, a message is returned.
+        """
         try:
             # Consultar la información de pago
             stripe_payment_info = await self.find_stripe_payment(payment_intent_id)

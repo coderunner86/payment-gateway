@@ -32,11 +32,7 @@ Input parameters:
 
 
 @router.post("/login")
-async def login(
-    email: str = Form(...),
-    password: str = Form(...)
-    ):
-    
+async def login(email: str = Form(...), password: str = Form(...)):
     user = UserLogin(email=email, password=password)
     retrieve_user = await UserService().find_user_by_email(email=user.email)
     if not retrieve_user:

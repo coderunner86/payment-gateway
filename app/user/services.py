@@ -52,6 +52,11 @@ class UserService:
 
         return result
     async def create_user(self, user: CreateUser, stripe_user=CreateStripeUser):
+        """
+        Asynchronously creates a new user with the given user data and an optional Stripe user. 
+        Returns a message indicating success along with the created user's Stripe ID, 
+        or an error message in case of an exception.
+        """
         try:
             encripted_password = Hasher.get_password_hash(user.password)
             user_data = user.dict()
@@ -71,6 +76,17 @@ class UserService:
             return {"error": str(ex)}
 
     async def update_user(self, user_id: int, user: UpdateUser):
+        """
+        Asynchronously updates a user with the given user ID using the provided user data.
+
+        Args:
+            user_id (int): The ID of the user to be updated.
+            user (UpdateUser): The updated user data.
+
+        Returns:
+            dict: A dictionary containing the message and the result of the update operation, 
+                or an error message in case of an exception.
+        """
         try:
             encripted_password = Hasher.get_password_hash(user.password)
             user_data = user.dict()
@@ -98,16 +114,36 @@ class UserService:
 # TODO: 
 # Review the logic of this service, it's not clean and it should be refactored
     # Check if the logic increment future workload for the database
-# Check if the user already exist in Stripe
-# Check if the user already exist in the database
+    # Check if the user already exist in Stripe
+    # Check if the user already exist in the database
      
     async def create_stripe_user(self, user: CreateStripeUser):
+        """
+        Asynchronously creates a new Stripe user using the provided user data.
+
+        Args:
+            user (CreateStripeUser): The data of the user to be created in Stripe.
+
+        Returns:
+            dict: A dictionary containing a success message if the user is created
+            successfully, or an error message if an exception occurs.
+        """
         try:
             new_user = await self.repository.user.create(data = user.dict())
             return  {"message": "User created successfully"}
         except Exception as ex:
             return {"error": str(ex)}
     async def update_stripe_user(self, user_id: int, user: CreateStripeUser):
+        """
+        Asynchronously updates a Stripe user with the given user ID using the provided data.
+
+        Args:
+            user_id (int): The ID of the user to update.
+            user (CreateStripeUser): The data to update the user with.
+
+        Returns:
+            dict: A dictionary containing the message and result of the update, or an error message if an exception occurs.
+        """
         try:
             result = await self.repository.user.update(
                 where={"id": user_id},

@@ -1,17 +1,18 @@
-import stripe
-
-from pydantic import BaseModel
-from pydantic import  ValidationError
-
 import os
 from dotenv import load_dotenv
+import stripe
 
 env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
-
 async def get_customers_info():
+            """
+            Asynchronously retrieves information about customers.
+
+            Returns:
+                dict: A dictionary containing customer information, or an error dictionary if an exception is encountered.
+            """
             try:
                 customers = stripe.Customer.list(limit=10) 
                 customers_info = []

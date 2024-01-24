@@ -1,19 +1,17 @@
-import stripe
-
-from pydantic import BaseModel
-from pydantic import  ValidationError
-
 import os
 from dotenv import load_dotenv
+import stripe 
 
 env_path = os.path.join(".", ".env")
 load_dotenv(dotenv_path=env_path)
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
-
-import stripe
-
 async def get_payment_links():
+        """
+        Asynchronously retrieves payment links and related product information from the Stripe API.
+        Returns a list of tuples containing the payment links, product names, product images, and descriptions.
+        If an exception occurs, returns a dictionary with the error message.
+        """
         try:
         
             links = [link.url for link in stripe.PaymentLink.list(limit=100, active=True).data]

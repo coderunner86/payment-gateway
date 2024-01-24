@@ -31,6 +31,17 @@ class ProductService:
 
 
     async def create_product(self, product: CreateProduct):
+        """
+        Asynchronously creates a new product using the provided CreateProduct instance.
+
+        Args:
+            self: The class instance.
+            product: An instance of CreateProduct.
+
+        Returns:
+            A dictionary containing a success message and the created product id, 
+            or an error message in case of an exception.
+        """
         try:    
             new_product = await self.repository.product.create(data = product.dict())
             new_stripe_product = stripe.Product.create(name=new_product.name, description=new_product.description)
@@ -62,6 +73,15 @@ class ProductService:
         return result
     
     def archive_by_prod_id(self, product_id: str):
+        """
+        Archive a product by its ID and deactivate associated prices. 
+
+        Args:
+            product_id (str): The ID of the product to be archived.
+
+        Returns:
+            dict: The archived product details, or an error message if the operation fails.
+        """
         try:
             archived_product = stripe.Product.modify(product_id, active=False)
             prices = stripe.Price.list(product=product_id)
@@ -81,6 +101,19 @@ class ProductService:
             return {"error on the service": str(ex)}
         
     def get_stripe_product():
+        """
+        Retrieves a list of active Stripe products and returns a dictionary containing their IDs, names, descriptions, and images.
+
+        Returns:
+            product_dict (dict): A dictionary containing the following keys:
+                - ids (list): A list of product IDs.
+                - names (list): A list of product names.
+                - descriptions (list): A list of product descriptions.
+                - images (list): A list of product images.
+
+        Raises:
+            stripe.error.StripeError: If an error occurs while retrieving the Stripe products.
+        """
         try:
             products = stripe.Product.list(active=True)
             ids = [product.id for product in products]
