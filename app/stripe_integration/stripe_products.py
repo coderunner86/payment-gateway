@@ -24,12 +24,12 @@ async def get_payment_links():
             shift_linarray = [i-1 for i in linarray]
 
             productos_invertidos = list.reverse(productos)
-            shift_productos = [productos[i-2] for i in shift_linarray]
+            shift_productos = [productos[i-1] for i in shift_linarray]
             productos_invertidos = shift_productos[::1]
             
             images = [product.images for product in stripe.Product.list(limit=100).data]
             images_invertidos = list.reverse(images)  
-            shift_images = [images[i-2] for i in shift_linarray]
+            shift_images = [images[i-1] for i in shift_linarray]
             images_invertidos = shift_images[::1]    
             
             desc = [product.description for product in stripe.Product.list(limit=100).data]  
