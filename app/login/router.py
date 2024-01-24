@@ -40,8 +40,7 @@ async def login(
     user = UserLogin(email=email, password=password)
     retrieve_user = await UserService().find_user_by_email(email=user.email)
     if not retrieve_user:
-        alert = "Email not found!"
-        return {"alert": alert}
+        raise HTTPException(status_code=401, detail="Invalid Email!")
     else:
         verified = Hasher.verify_password(
             plain_password=user.password, hashed_password=retrieve_user.password
@@ -65,5 +64,4 @@ async def login(
             return response if session_id != None else redirect_home
 
         else:
-            alert = "Invalid credentials!"
-            return {"alert": alert}
+            raise HTTPException(status_code=401, detail="Invalid credentials!")
