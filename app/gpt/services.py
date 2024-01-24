@@ -92,9 +92,11 @@ class GptService:
                         {'role': 'user', 
                         'content': f"{delimiter}{user_messages}{delimiter}"},  
                     ]
+                    print("messages", messages)
                     prompt = ""
                     for message in messages:
                         prompt += f"{message['role'].title()}: {message['content']}\n"
+                    print("prompt", prompt)
                     response = await client.post(
                         'https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions',
                         headers={
@@ -110,9 +112,7 @@ class GptService:
                     )
                     response.raise_for_status()
                     print(response.json())
-                    return response.json()['choices'][0]['text']
-                    if response.status_code != 200:
-                        return "La respuesta de GPT-3 no se encuentra disponible"                                         
+                    return response.json()['choices'][0]['text']                               
             except httpx.RequestError as e:
                     raise HTTPException(status_code=400, detail=f"HTTP request failed: {e}")
 
